@@ -66,14 +66,42 @@ python -m SimpleHTTPServer 8000
 
 Mỗi người sẽ có game instance riêng (như chơi offline nhưng trên web)
 
+## 🎨 Sử Dụng Ảnh PNG (Tùy Chọn)
+
+Game hỗ trợ sử dụng ảnh PNG cho Mario, enemies và coins!
+
+### Cách thêm ảnh:
+1. Tạo/tải 3 file ảnh PNG:
+   - `mario.png` (32x32 pixels)
+   - `enemy.png` (30x30 pixels)
+   - `coin.png` (20x20 pixels)
+
+2. Đặt vào thư mục `images/`
+
+3. Refresh game → Ảnh tự động load!
+
+### Tạo sprite nhanh:
+- Mở file `create-sprites.html` trong trình duyệt
+- Click "Vẽ ..." và "Tải về PNG"
+- Hoặc xem hướng dẫn chi tiết trong `images/README.md`
+
+**Lưu ý:** Nếu không có ảnh, game vẫn chạy bình thường với hình vẽ mặc định!
+
 ## 📁 Cấu Trúc Dự Án
 
 ```
 mario/
-├── index.html      # File HTML chính
-├── style.css       # Stylesheet cho game
-├── game.js         # Logic game và game engine
-└── README.md       # Tài liệu hướng dẫn
+├── index.html           # File HTML chính
+├── style.css            # Stylesheet cho game
+├── game.js              # Logic game và game engine
+├── create-sprites.html  # Tool tạo sprites nhanh
+├── images/              # Thư mục chứa ảnh PNG
+│   ├── mario.png       # (Tùy chọn) Ảnh Mario
+│   ├── enemy.png       # (Tùy chọn) Ảnh kẻ thù
+│   ├── coin.png        # (Tùy chọn) Ảnh đồng xu
+│   └── README.md       # Hướng dẫn thêm ảnh
+├── DEPLOY.md           # Hướng dẫn deploy
+└── README.md           # Tài liệu chính
 ```
 
 ## 🎨 Công Nghệ Sử Dụng

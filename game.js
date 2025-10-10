@@ -13,8 +13,42 @@ const game = {
     isRunning: false,
     isGameOver: false,
     camera: { x: 0 },
-    level: 1
+    level: 1,
+    imagesLoaded: false
 };
+
+// Image Loading
+const images = {
+    mario: new Image(),
+    enemy: new Image(),
+    coin: new Image()
+};
+
+// Load images
+images.mario.src = 'images/mario.png';
+images.enemy.src = 'images/enemy.png';
+images.coin.src = 'images/coin.png';
+
+// Track loaded images
+let loadedCount = 0;
+const totalImages = 3;
+
+function checkImagesLoaded() {
+    loadedCount++;
+    if (loadedCount === totalImages) {
+        game.imagesLoaded = true;
+        console.log('All images loaded!');
+    }
+}
+
+images.mario.onload = checkImagesLoaded;
+images.enemy.onload = checkImagesLoaded;
+images.coin.onload = checkImagesLoaded;
+
+// Fallback if images don't load
+images.mario.onerror = () => { images.mario.src = ''; checkImagesLoaded(); };
+images.enemy.onerror = () => { images.enemy.src = ''; checkImagesLoaded(); };
+images.coin.onerror = () => { images.coin.src = ''; checkImagesLoaded(); };
 
 // Player Class
 class Player {
@@ -126,30 +160,41 @@ class Player {
     }
 
     draw() {
-        // Draw player as Mario-like character
         ctx.save();
         ctx.translate(this.x - game.camera.x, this.y);
         
-        // Body
-        ctx.fillStyle = '#e74c3c';
-        ctx.fillRect(0, 8, this.width, this.height - 8);
-        
-        // Head
-        ctx.fillStyle = '#f39c12';
-        ctx.beginPath();
-        ctx.arc(this.width / 2, 8, 10, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Cap
-        ctx.fillStyle = '#c0392b';
-        ctx.fillRect(this.width / 4, 0, this.width / 2, 8);
-        
-        // Eyes
-        ctx.fillStyle = 'black';
-        if (this.direction === 'right') {
-            ctx.fillRect(this.width / 2 + 2, 6, 3, 3);
+        // Draw image if loaded, otherwise draw simple shape
+        if (images.mario.complete && images.mario.src) {
+            // Flip image if facing left
+            if (this.direction === 'left') {
+                ctx.scale(-1, 1);
+                ctx.drawImage(images.mario, -this.width, 0, this.width, this.height);
+            } else {
+                ctx.drawImage(images.mario, 0, 0, this.width, this.height);
+            }
         } else {
-            ctx.fillRect(this.width / 2 - 5, 6, 3, 3);
+            // Fallback: Draw player as Mario-like character
+            // Body
+            ctx.fillStyle = '#e74c3c';
+            ctx.fillRect(0, 8, this.width, this.height - 8);
+            
+            // Head
+            ctx.fillStyle = '#f39c12';
+            ctx.beginPath();
+            ctx.arc(this.width / 2, 8, 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Cap
+            ctx.fillStyle = '#c0392b';
+            ctx.fillRect(this.width / 4, 0, this.width / 2, 8);
+            
+            // Eyes
+            ctx.fillStyle = 'black';
+            if (this.direction === 'right') {
+                ctx.fillRect(this.width / 2 + 2, 6, 3, 3);
+            } else {
+                ctx.fillRect(this.width / 2 - 5, 6, 3, 3);
+            }
         }
         
         ctx.restore();
@@ -232,21 +277,26 @@ class Enemy {
         ctx.save();
         ctx.translate(-game.camera.x, 0);
         
-        // Draw enemy as mushroom-like creature
-        ctx.fillStyle = '#8e44ad';
-        ctx.beginPath();
-        ctx.arc(this.x + this.width / 2, this.y + 10, 12, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.fillStyle = '#9b59b6';
-        ctx.fillRect(this.x + 8, this.y + 10, this.width - 16, this.height - 10);
-        
-        // Eyes
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.arc(this.x + 10, this.y + 8, 3, 0, Math.PI * 2);
-        ctx.arc(this.x + 20, this.y + 8, 3, 0, Math.PI * 2);
-        ctx.fill();
+        // Draw image if loaded, otherwise draw simple shape
+        if (images.enemy.complete && images.enemy.src) {
+            ctx.drawImage(images.enemy, this.x, this.y, this.width, this.height);
+        } else {
+            // Fallback: Draw enemy as mushroom-like creature
+            ctx.fillStyle = '#8e44ad';
+            ctx.beginPath();
+            ctx.arc(this.x + this.width / 2, this.y + 10, 12, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#9b59b6';
+            ctx.fillRect(this.x + 8, this.y + 10, this.width - 16, this.height - 10);
+            
+            // Eyes
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(this.x + 10, this.y + 8, 3, 0, Math.PI * 2);
+            ctx.arc(this.x + 20, this.y + 8, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
         
         ctx.restore();
     }
@@ -270,15 +320,24 @@ class Coin {
         ctx.save();
         ctx.translate(-game.camera.x, 0);
         
-        ctx.fillStyle = '#f39c12';
-        ctx.beginPath();
-        ctx.arc(this.x + 10, this.y + 10, 8 + Math.sin(this.angle) * 2, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.fillStyle = '#f1c40f';
-        ctx.beginPath();
-        ctx.arc(this.x + 10, this.y + 10, 5, 0, Math.PI * 2);
-        ctx.fill();
+        // Draw image if loaded, otherwise draw simple shape
+        if (images.coin.complete && images.coin.src) {
+            // Add rotation animation
+            ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+            ctx.rotate(this.angle);
+            ctx.drawImage(images.coin, -this.width / 2, -this.height / 2, this.width, this.height);
+        } else {
+            // Fallback: Draw simple coin
+            ctx.fillStyle = '#f39c12';
+            ctx.beginPath();
+            ctx.arc(this.x + 10, this.y + 10, 8 + Math.sin(this.angle) * 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#f1c40f';
+            ctx.beginPath();
+            ctx.arc(this.x + 10, this.y + 10, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
         
         ctx.restore();
     }

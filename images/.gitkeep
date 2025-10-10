@@ -1,0 +1,6 @@
+# This file ensures the images directory is tracked by git
+# Place your PNG sprites here:
+# - mario.png (32x32)
+# - enemy.png (30x30)  
+# - coin.png (20x20)
+
