@@ -1,8 +1,10 @@
-// Enemy class (Goomba-like)
+// Enemy class (Life challenges)
 class Enemy extends Entity {
-    constructor(x, y, minX, maxX) {
+    constructor(x, y, minX, maxX, type = 'work') {
         super(x, y, 35, 35);
-        this.color = '#8B4513'; // Brown
+        this.type = type;
+        this.color = this.getColorByType();
+        this.label = this.getLabelByType();
         this.speed = 80;
         this.velocityX = -this.speed;
         this.minX = minX;
@@ -19,6 +21,26 @@ class Enemy extends Entity {
         }).catch(err => {
             console.log('Using default graphics for Enemy');
         });
+    }
+
+    getColorByType() {
+        const colors = {
+            deadline: '#FF6B6B',
+            traffic: '#4ECDC4',
+            work: '#FFA07A',
+            stress: '#DDA0DD'
+        };
+        return colors[this.type] || '#8B4513';
+    }
+
+    getLabelByType() {
+        const labels = {
+            deadline: '⏰',
+            traffic: '🚗',
+            work: '💼',
+            stress: '😰'
+        };
+        return labels[this.type] || '👾';
     }
 
     // Update enemy
@@ -54,7 +76,7 @@ class Enemy extends Entity {
         });
     }
 
-    // Draw enemy
+    // Draw enemy (challenge)
     draw(ctx) {
         if (!this.isAlive && !this.isDying) {
             return; // Don't draw if completely dead
@@ -70,7 +92,7 @@ class Enemy extends Entity {
         if (this.image && this.image.complete) {
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
-            // Draw simple enemy (Goomba-like)
+            // Draw cute challenge representation
             // Body
             ctx.fillStyle = this.color;
             ctx.beginPath();
@@ -96,10 +118,17 @@ class Enemy extends Entity {
             ctx.fill();
             
             // Feet
-            ctx.fillStyle = '#654321';
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = 0.7;
             ctx.fillRect(this.x + 5, this.y + this.height - 5, 10, 5);
             ctx.fillRect(this.x + 20, this.y + this.height - 5, 10, 5);
         }
+
+        // Draw emoji label above
+        ctx.globalAlpha = 1;
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(this.label, this.x + this.width/2, this.y - 5);
         
         ctx.restore();
     }

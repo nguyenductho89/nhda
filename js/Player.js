@@ -44,6 +44,10 @@ class Player extends Entity {
             this.velocityY = this.jumpForce;
             this.isJumping = true;
             this.isOnGround = false;
+            // Play jump sound (if audio manager is available globally)
+            if (window.game && window.game.audioManager) {
+                window.game.audioManager.playJumpSound();
+            }
         }
 
         // Apply gravity
