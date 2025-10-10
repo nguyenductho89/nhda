@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mario Game - Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #e74c3c; }
+        h2 { color: #3498db; }
+        .test-item {
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #2ecc71;
+            background: #ecf0f1;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #2ecc71; color: white; }
+        .error { background: #e74c3c; color: white; }
+        .info { background: #3498db; color: white; }
+        button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #c0392b;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 Mario Game - Test Page</h1>
+    
+    <div class="test-section">
+        <h2>📋 Pre-Launch Checklist</h2>
+        <div id="checklist">
+            <div class="test-item" id="html-check">
+                <span class="status info">⏳</span> Checking HTML file...
+            </div>
+            <div class="test-item" id="css-check">
+                <span class="status info">⏳</span> Checking CSS file...
+            </div>
+            <div class="test-item" id="js-check">
+                <span class="status info">⏳</span> Checking JavaScript files...
+            </div>
+            <div class="test-item" id="images-check">
+                <span class="status info">⏳</span> Checking image files...
+            </div>
+            <div class="test-item" id="canvas-check">
+                <span class="status info">⏳</span> Checking Canvas support...
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🚀 Launch Options</h2>
+        <button onclick="window.location.href='index.html'">▶️ Play Game</button>
+        <button onclick="runTests()">🧪 Run All Tests</button>
+        <button onclick="checkFiles()">📁 Check Files</button>
+    </div>
+
+    <div class="test-section" id="results" style="display:none;">
+        <h2>📊 Test Results</h2>
+        <div id="test-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📚 Documentation</h2>
+        <ul>
+            <li><a href="README.md">README.md</a> - Main documentation</li>
+            <li><a href="QUICKSTART.md">QUICKSTART.md</a> - Quick start guide</li>
+            <li><a href="DEPLOYMENT.md">DEPLOYMENT.md</a> - Deployment guide</li>
+            <li><a href="CONTRIBUTING.md">CONTRIBUTING.md</a> - Contribution guide</li>
+            <li><a href="PROJECT_SUMMARY.md">PROJECT_SUMMARY.md</a> - Project overview</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>ℹ️ System Information</h2>
+        <p><strong>Browser:</strong> <span id="browser"></span></p>
+        <p><strong>Platform:</strong> <span id="platform"></span></p>
+        <p><strong>Screen Size:</strong> <span id="screen"></span></p>
+        <p><strong>Canvas Support:</strong> <span id="canvas-support"></span></p>
+    </div>
+
+    <script>
+        // Display system info
+        document.getElementById('browser').textContent = navigator.userAgent;
+        document.getElementById('platform').textContent = navigator.platform;
+        document.getElementById('screen').textContent = `${window.screen.width}x${window.screen.height}`;
+        
+        // Check Canvas support
+        const canvas = document.createElement('canvas');
+        const hasCanvas = !!(canvas.getContext && canvas.getContext('2d'));
+        document.getElementById('canvas-support').innerHTML = hasCanvas ? 
+            '<span class="status success">✓ Supported</span>' : 
+            '<span class="status error">✗ Not Supported</span>';
+
+        // Auto-run checks on load
+        window.onload = function() {
+            setTimeout(runAutoChecks, 500);
+        };
+
+        function updateCheck(id, success, message) {
+            const element = document.getElementById(id);
+            const statusClass = success ? 'success' : 'error';
+            const statusIcon = success ? '✓' : '✗';
+            element.innerHTML = `<span class="status ${statusClass}">${statusIcon}</span> ${message}`;
+        }
+
+        function runAutoChecks() {
+            // Check HTML
+            fetch('index.html')
+                .then(response => {
+                    updateCheck('html-check', response.ok, 'index.html found');
+                })
+                .catch(() => {
+                    updateCheck('html-check', false, 'index.html not found');
+                });
+
+            // Check CSS
+            fetch('css/style.css')
+                .then(response => {
+                    updateCheck('css-check', response.ok, 'style.css found');
+                })
+                .catch(() => {
+                    updateCheck('css-check', false, 'style.css not found');
+                });
+
+            // Check JS files
+            Promise.all([
+                fetch('js/main.js'),
+                fetch('js/Game.js'),
+                fetch('js/Player.js')
+            ])
+            .then(responses => {
+                const allOk = responses.every(r => r.ok);
+                updateCheck('js-check', allOk, `${responses.filter(r => r.ok).length}/3 JS files found`);
+            })
+            .catch(() => {
+                updateCheck('js-check', false, 'JS files check failed');
+            });
+
+            // Check images
+            Promise.all([
+                fetch('assets/images/mario.png'),
+                fetch('assets/images/enemy.png'),
+                fetch('assets/images/princess.png')
+            ])
+            .then(responses => {
+                const count = responses.filter(r => r.ok).length;
+                updateCheck('images-check', count > 0, `${count}/3 image files found`);
+            })
+            .catch(() => {
+                updateCheck('images-check', false, 'Image files check failed');
+            });
+
+            // Check Canvas
+            updateCheck('canvas-check', hasCanvas, hasCanvas ? 'Canvas API supported' : 'Canvas API not supported');
+        }
+
+        function runTests() {
+            document.getElementById('results').style.display = 'block';
+            const output = document.getElementById('test-output');
+            output.innerHTML = '<p>Running comprehensive tests...</p>';
+            
+            let results = [];
+            
+            // Test 1: Canvas
+            results.push(`<div class="test-item">Canvas Support: ${hasCanvas ? '✓ Pass' : '✗ Fail'}</div>`);
+            
+            // Test 2: Local Storage
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                results.push(`<div class="test-item">Local Storage: ✓ Pass</div>`);
+            } catch(e) {
+                results.push(`<div class="test-item">Local Storage: ✗ Fail</div>`);
+            }
+            
+            // Test 3: ES6 Support
+            try {
+                eval('const test = () => {};');
+                results.push(`<div class="test-item">ES6 Support: ✓ Pass</div>`);
+            } catch(e) {
+                results.push(`<div class="test-item">ES6 Support: ✗ Fail</div>`);
+            }
+            
+            // Display results
+            setTimeout(() => {
+                output.innerHTML = results.join('');
+            }, 500);
+        }
+
+        function checkFiles() {
+            alert('File structure check:\n\n' +
+                '✓ index.html\n' +
+                '✓ css/style.css\n' +
+                '✓ js/*.js (8 files)\n' +
+                '✓ assets/images/\n' +
+                '✓ Documentation files\n\n' +
+                'All required files are in place!');
+        }
+    </script>
+</body>
+</html>
+

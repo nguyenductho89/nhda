@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Mario Game</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-info">
+            <h1>🎮 Super Mario Game</h1>
+            <div class="stats">
+                <span id="score">Score: 0</span>
+                <span id="lives">Lives: 3</span>
+            </div>
+            <div class="controls-info">
+                <p>← → : Di chuyển | Space: Nhảy | R: Chơi lại</p>
+            </div>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="gameMessage" class="game-message hidden"></div>
+    </div>
+
+    <!-- Game Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/Entity.js"></script>
+    <script src="js/Platform.js"></script>
+    <script src="js/Player.js"></script>
+    <script src="js/Enemy.js"></script>
+    <script src="js/Princess.js"></script>
+    <script src="js/Game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+
