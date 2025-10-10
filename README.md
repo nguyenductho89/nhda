@@ -52,6 +52,20 @@ python -m SimpleHTTPServer 8000
 1. Cài đặt extension "Live Server" trong VS Code
 2. Click phải vào `index.html` và chọn "Open with Live Server"
 
+## 🌍 Deploy Lên Server (Cho Nhiều Người Chơi Online)
+
+**Game này có thể deploy lên hosting miễn phí** để ai có link đều chơi được!
+
+📖 **[Xem hướng dẫn chi tiết trong DEPLOY.md](DEPLOY.md)**
+
+### Quick Deploy với GitHub Pages:
+1. Push code lên GitHub
+2. Bật GitHub Pages trong Settings
+3. Chia sẻ link: `https://username.github.io/mario-game/`
+4. **✅ Xong! Mọi người giờ có thể chơi!**
+
+Mỗi người sẽ có game instance riêng (như chơi offline nhưng trên web)
+
 ## 📁 Cấu Trúc Dự Án
 
 ```
