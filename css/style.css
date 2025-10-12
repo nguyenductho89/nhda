@@ -137,6 +137,37 @@ body::before {
     }
 }
 
+/* Landscape orientation message */
+.orientation-message {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 182, 193, 0.98);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    color: #8B008B;
+    font-size: 1.2em;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.orientation-message .icon {
+    font-size: 3em;
+    animation: rotate 2s infinite;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(-90deg); }
+    100% { transform: rotate(-90deg); }
+}
+
 /* Mobile Controls */
 .mobile-controls {
     display: none; /* Hidden by default on desktop */
@@ -187,7 +218,7 @@ body::before {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 768px) and (orientation: landscape) {
     body {
         padding: 10px;
     }
@@ -239,7 +270,7 @@ body::before {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 480px) and (orientation: landscape) {
     .game-info h1 {
         font-size: 1.2em;
     }
@@ -264,6 +295,17 @@ body::before {
     .game-message {
         font-size: 1.1em;
         padding: 15px 20px;
+    }
+}
+
+/* Portrait orientation */
+@media (orientation: portrait) {
+    .orientation-message {
+        display: flex;
+    }
+    
+    .game-container {
+        display: none;
     }
 }
 
