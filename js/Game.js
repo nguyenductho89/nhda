@@ -114,6 +114,77 @@ class Game {
         window.addEventListener('keyup', (e) => {
             this.keys[e.key] = false;
         });
+
+        // Mobile touch controls
+        this.setupMobileControls();
+    }
+
+    setupMobileControls() {
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+        const jumpBtn = document.getElementById('jumpBtn');
+
+        if (!leftBtn || !rightBtn || !jumpBtn) return;
+
+        // Prevent default touch behaviors
+        [leftBtn, rightBtn, jumpBtn].forEach(btn => {
+            btn.addEventListener('touchstart', (e) => e.preventDefault());
+            btn.addEventListener('touchend', (e) => e.preventDefault());
+        });
+
+        // Left button
+        leftBtn.addEventListener('touchstart', () => {
+            this.keys['ArrowLeft'] = true;
+        });
+        leftBtn.addEventListener('touchend', () => {
+            this.keys['ArrowLeft'] = false;
+        });
+
+        // Right button
+        rightBtn.addEventListener('touchstart', () => {
+            this.keys['ArrowRight'] = true;
+        });
+        rightBtn.addEventListener('touchend', () => {
+            this.keys['ArrowRight'] = false;
+        });
+
+        // Jump button
+        jumpBtn.addEventListener('touchstart', () => {
+            this.keys[' '] = true;
+            // Handle start screen on mobile
+            if (this.gameState === 'start') {
+                if (this.startScreen.handleInput(' ')) {
+                    this.gameState = 'playing';
+                    this.audioManager.resume();
+                    this.audioManager.playRomanticMelody();
+                }
+            }
+        });
+        jumpBtn.addEventListener('touchend', () => {
+            this.keys[' '] = false;
+        });
+
+        // Also support mouse for testing on desktop
+        leftBtn.addEventListener('mousedown', () => this.keys['ArrowLeft'] = true);
+        leftBtn.addEventListener('mouseup', () => this.keys['ArrowLeft'] = false);
+        leftBtn.addEventListener('mouseleave', () => this.keys['ArrowLeft'] = false);
+
+        rightBtn.addEventListener('mousedown', () => this.keys['ArrowRight'] = true);
+        rightBtn.addEventListener('mouseup', () => this.keys['ArrowRight'] = false);
+        rightBtn.addEventListener('mouseleave', () => this.keys['ArrowRight'] = false);
+
+        jumpBtn.addEventListener('mousedown', () => {
+            this.keys[' '] = true;
+            if (this.gameState === 'start') {
+                if (this.startScreen.handleInput(' ')) {
+                    this.gameState = 'playing';
+                    this.audioManager.resume();
+                    this.audioManager.playRomanticMelody();
+                }
+            }
+        });
+        jumpBtn.addEventListener('mouseup', () => this.keys[' '] = false);
+        jumpBtn.addEventListener('mouseleave', () => this.keys[' '] = false);
     }
 
     update(deltaTime) {

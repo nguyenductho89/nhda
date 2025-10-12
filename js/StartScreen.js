@@ -99,29 +99,50 @@ class StartScreen {
             ctx.fillText(line, width/2, namesY + 50 + i * 30);
         });
 
-        // Instructions box
+        // Instructions box with detailed guide
         ctx.save();
-        const boxY = height - 180;
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-        ctx.fillRect(width/2 - 200, boxY, 400, 120);
+        const boxY = height - 220;
+        const boxWidth = Math.min(450, width - 40);
+        const boxHeight = 160;
+        const boxX = width/2 - boxWidth/2;
+        
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
         ctx.strokeStyle = '#FF69B4';
         ctx.lineWidth = 3;
-        ctx.strokeRect(width/2 - 200, boxY, 400, 120);
+        ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
 
         ctx.fillStyle = '#8B008B';
-        ctx.font = 'bold 20px Arial';
-        ctx.fillText('🎮 Cách Chơi:', width/2, boxY + 30);
+        ctx.font = 'bold 22px Arial';
+        ctx.fillText('🎮 Cách Chơi', width/2, boxY + 30);
         
-        ctx.font = '16px Arial';
-        ctx.fillText('← → : Di chuyển', width/2, boxY + 55);
-        ctx.fillText('Space : Nhảy', width/2, boxY + 80);
+        // Game objectives
+        ctx.font = '15px Arial';
+        ctx.fillStyle = '#C71585';
+        ctx.fillText('🎯 Mục tiêu: Vượt chướng ngại vật và gặp cô dâu!', width/2, boxY + 55);
+        
+        // Controls - detect if mobile
+        ctx.font = '14px Arial';
+        ctx.fillStyle = '#8B008B';
+        const isMobile = width < 768;
+        
+        if (isMobile) {
+            ctx.fillText('📱 Điều khiển: Dùng nút bấm bên dưới', width/2, boxY + 80);
+            ctx.fillText('💕 Thu thập trái tim để được điểm', width/2, boxY + 100);
+            ctx.fillText('⚠️ Tránh kẻ thù hoặc nhảy lên đầu chúng!', width/2, boxY + 120);
+        } else {
+            ctx.fillText('⌨️ ← → : Di chuyển | Space: Nhảy | R: Chơi lại', width/2, boxY + 80);
+            ctx.fillText('💕 Thu thập trái tim để được điểm', width/2, boxY + 100);
+            ctx.fillText('⚠️ Tránh kẻ thù hoặc nhảy lên đầu chúng!', width/2, boxY + 120);
+        }
         
         // Pulsing start text
         const pulse = 0.8 + Math.sin(this.animationTimer * 4) * 0.2;
         ctx.globalAlpha = pulse;
-        ctx.font = 'bold 22px Arial';
+        ctx.font = 'bold 20px Arial';
         ctx.fillStyle = '#FF1493';
-        ctx.fillText('Nhấn SPACE để bắt đầu! ✨', width/2, boxY + 105);
+        const startText = isMobile ? 'Chạm nút Nhảy để bắt đầu! ✨' : 'Nhấn SPACE để bắt đầu! ✨';
+        ctx.fillText(startText, width/2, boxY + 145);
         ctx.restore();
 
         // Hearts decoration

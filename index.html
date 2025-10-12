@@ -15,11 +15,23 @@
                 <span id="lives">❤️ Lives: 3</span>
             </div>
             <div class="controls-info">
-                <p>← → : Di chuyển | Space: Nhảy | R: Chơi lại</p>
+                <p class="desktop-controls">⌨️ ← → : Di chuyển | Space: Nhảy | R: Chơi lại</p>
+                <p class="mobile-controls-text">📱 Sử dụng nút điều khiển bên dưới</p>
             </div>
         </div>
         <canvas id="gameCanvas"></canvas>
         <div id="gameMessage" class="game-message hidden"></div>
+        
+        <!-- Mobile Controls -->
+        <div class="mobile-controls">
+            <div class="controls-left">
+                <button class="control-btn" id="leftBtn">◀</button>
+                <button class="control-btn" id="rightBtn">▶</button>
+            </div>
+            <div class="controls-right">
+                <button class="control-btn jump-btn" id="jumpBtn">↑<br><small>Nhảy</small></button>
+            </div>
+        </div>
     </div>
 
     <!-- Game Scripts -->
