@@ -47,5 +47,49 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Scale:', rm?.scale);
         console.log('Container:', c.parentElement.getBoundingClientRect());
     };
+    
+    // Mobile debug overlay - triple tap to show
+    let tapCount = 0;
+    let tapTimer = null;
+    document.addEventListener('touchend', () => {
+        tapCount++;
+        clearTimeout(tapTimer);
+        
+        if (tapCount === 3) {
+            showDebugInfo();
+            tapCount = 0;
+        } else {
+            tapTimer = setTimeout(() => {
+                tapCount = 0;
+            }, 500);
+        }
+    });
+    
+    function showDebugInfo() {
+        const c = document.getElementById('gameCanvas');
+        const rm = window.game?.responsiveManager;
+        const debugDiv = document.getElementById('debugInfo');
+        const debugText = document.getElementById('debugText');
+        
+        if (!debugDiv) return;
+        
+        let info = '';
+        info += `Window: ${window.innerWidth}x${window.innerHeight}\n`;
+        if (window.visualViewport) {
+            info += `Visual: ${Math.round(window.visualViewport.width)}x${Math.round(window.visualViewport.height)}\n`;
+        }
+        info += `Canvas: ${c.style.width} x ${c.style.height}\n`;
+        info += `Internal: ${c.width}x${c.height}\n`;
+        info += `Scale: ${rm?.scale ? (rm.scale * 100).toFixed(0) + '%' : 'N/A'}\n`;
+        info += `Mobile: ${window.innerWidth <= 768 ? 'Yes' : 'No'}\n`;
+        info += `Orient: ${window.matchMedia('(orientation: landscape)').matches ? 'Land' : 'Port'}\n`;
+        
+        debugText.innerHTML = info.replace(/\n/g, '<br>');
+        debugDiv.style.display = 'block';
+        
+        console.log('Debug info shown. Tap Close to hide.');
+    }
+    
+    window.showDebugInfo = showDebugInfo;
 });
 

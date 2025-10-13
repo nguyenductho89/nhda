@@ -21,6 +21,12 @@
         <p><small>Để có trải nghiệm tốt nhất</small></p>
     </div>
 
+    <!-- Debug Info (remove after testing) -->
+    <div id="debugInfo" style="display: none; position: fixed; top: 0; left: 0; background: rgba(0,0,0,0.8); color: lime; padding: 5px; font-size: 10px; z-index: 10000; font-family: monospace; max-width: 200px; line-height: 1.3;">
+        <div id="debugText">Debug Info</div>
+        <button onclick="document.getElementById('debugInfo').style.display='none'" style="margin-top: 5px; font-size: 10px;">Close</button>
+    </div>
+
     <div class="game-container">
         <div class="game-info">
             <h1>💕 Hành Trình Tình Yêu 💕</h1>
@@ -49,6 +55,7 @@
     </div>
 
     <!-- Game Scripts -->
+    <script src="js/MobileOptimizer.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/Entity.js"></script>
     <script src="js/Platform.js"></script>

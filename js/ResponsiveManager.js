@@ -46,9 +46,11 @@ class ResponsiveManager {
         const containerRect = container.getBoundingClientRect();
         const containerWidth = containerRect.width;
         
-        // Use visualViewport for accurate mobile viewport (excludes browser UI)
+        // Use MobileOptimizer for accurate viewport height (excludes browser UI)
         let viewportHeight;
-        if (window.visualViewport) {
+        if (window.mobileOptimizer) {
+            viewportHeight = window.mobileOptimizer.getViewportHeight();
+        } else if (window.visualViewport) {
             viewportHeight = window.visualViewport.height;
         } else {
             viewportHeight = window.innerHeight;
