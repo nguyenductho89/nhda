@@ -18,6 +18,12 @@ class ResponsiveManager {
             setTimeout(() => this.resize(), 200);
         });
         
+        // Listen for visualViewport changes (mobile browser UI)
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => this.debouncedResize());
+            window.visualViewport.addEventListener('scroll', () => this.debouncedResize());
+        }
+        
         // Listen for fullscreen changes
         document.addEventListener('fullscreenchange', () => this.resize());
     }
@@ -39,7 +45,15 @@ class ResponsiveManager {
         // Get actual container dimensions
         const containerRect = container.getBoundingClientRect();
         const containerWidth = containerRect.width;
-        const viewportHeight = window.innerHeight;
+        
+        // Use visualViewport for accurate mobile viewport (excludes browser UI)
+        let viewportHeight;
+        if (window.visualViewport) {
+            viewportHeight = window.visualViewport.height;
+        } else {
+            viewportHeight = window.innerHeight;
+        }
+        
         const isMobile = window.innerWidth <= 768;
         const isLandscape = window.matchMedia('(orientation: landscape)').matches;
         
@@ -47,23 +61,32 @@ class ResponsiveManager {
         let availableWidth, availableHeight;
         
         if (isMobile && isLandscape) {
-            // Mobile landscape - calculate precisely
+            // Mobile landscape - calculate precisely for Chrome/Safari
             const gameInfo = document.querySelector('.game-info');
             const mobileControls = document.querySelector('.mobile-controls');
             
-            const headerHeight = gameInfo ? gameInfo.offsetHeight : 80;
-            const controlsHeight = mobileControls ? mobileControls.offsetHeight : 80;
-            const containerPadding = 20; // padding from container
-            const extraMargin = 20; // extra breathing room
+            const headerHeight = gameInfo ? gameInfo.offsetHeight : 0;
+            const controlsHeight = mobileControls ? mobileControls.offsetHeight : 0;
             
-            availableWidth = containerWidth - containerPadding;
-            availableHeight = viewportHeight - headerHeight - controlsHeight - containerPadding - extraMargin;
+            // Account for container padding and borders
+            const containerStyles = window.getComputedStyle(container);
+            const containerPaddingTop = parseFloat(containerStyles.paddingTop) || 0;
+            const containerPaddingBottom = parseFloat(containerStyles.paddingBottom) || 0;
+            const containerPaddingLeft = parseFloat(containerStyles.paddingLeft) || 0;
+            const containerPaddingRight = parseFloat(containerStyles.paddingRight) || 0;
             
-            // Ensure minimum playable size
-            availableHeight = Math.max(availableHeight, 200);
-            availableWidth = Math.max(availableWidth, 400);
+            // Mobile browsers: be more aggressive with space usage
+            const verticalPadding = containerPaddingTop + containerPaddingBottom + 10;
+            const horizontalPadding = containerPaddingLeft + containerPaddingRight + 10;
             
-            console.log(`📐 Available space: ${availableWidth}x${availableHeight} (header: ${headerHeight}, controls: ${controlsHeight})`);
+            availableWidth = containerWidth - horizontalPadding;
+            availableHeight = viewportHeight - headerHeight - controlsHeight - verticalPadding;
+            
+            // Ensure minimum playable size but be less conservative
+            availableHeight = Math.max(availableHeight, 180);
+            availableWidth = Math.max(availableWidth, 360);
+            
+            console.log(`📐 Mobile landscape: viewport=${viewportHeight}px, available=${availableHeight}px (header=${headerHeight}, controls=${controlsHeight}, padding=${verticalPadding})`);
         } else if (isMobile && !isLandscape) {
             // Mobile portrait - show orientation message
             availableWidth = containerWidth - 40;
