@@ -4,7 +4,7 @@ class Game {
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
         
-        // Set canvas size
+        // Set canvas base size
         this.canvas.width = 800;
         this.canvas.height = 400;
         
@@ -37,6 +37,9 @@ class Game {
         this.scoreElement = document.getElementById('score');
         this.livesElement = document.getElementById('lives');
         this.messageElement = document.getElementById('gameMessage');
+        
+        // Initialize responsive manager
+        this.responsiveManager = new ResponsiveManager(this);
         
         // Initialize
         this.init();

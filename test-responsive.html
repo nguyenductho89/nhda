@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Test Responsive Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #FFE5E5, #FFB6C1);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 10px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .info {
+            background: #FFE5E5;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .info div {
+            margin: 5px 0;
+        }
+        
+        #testCanvas {
+            display: block;
+            border: 3px solid #FF69B4;
+            border-radius: 10px;
+            background: linear-gradient(180deg, #FFE5E5, #FFB6C1);
+            margin: 0 auto;
+        }
+        
+        button {
+            margin: 10px 5px;
+            padding: 10px 20px;
+            background: #FF69B4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:active {
+            background: #FF1493;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="info">
+            <h2>📱 Test Responsive Canvas</h2>
+            <div><strong>Viewport:</strong> <span id="viewport">-</span></div>
+            <div><strong>Container:</strong> <span id="containerSize">-</span></div>
+            <div><strong>Canvas Display:</strong> <span id="canvasDisplay">-</span></div>
+            <div><strong>Canvas Internal:</strong> <span id="canvasInternal">-</span></div>
+            <div><strong>Scale:</strong> <span id="scale">-</span></div>
+            <div><strong>Device:</strong> <span id="device">-</span></div>
+        </div>
+        
+        <canvas id="testCanvas"></canvas>
+        
+        <div style="text-align: center; margin-top: 10px;">
+            <button onclick="updateCanvas()">🔄 Refresh</button>
+            <button onclick="location.href='index.html'">🎮 Back to Game</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('testCanvas');
+        const ctx = canvas.getContext('2d');
+        const baseWidth = 800;
+        const baseHeight = 400;
+
+        function updateCanvas() {
+            const container = document.querySelector('.container');
+            const containerRect = container.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const isMobile = window.innerWidth <= 768;
+            const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+            
+            // Calculate available space
+            const infoHeight = document.querySelector('.info').offsetHeight;
+            const buttonHeight = 60;
+            const padding = 40;
+            
+            const availableWidth = containerRect.width - 20;
+            const availableHeight = viewportHeight - infoHeight - buttonHeight - padding;
+            
+            // Calculate scale
+            const scaleX = availableWidth / baseWidth;
+            const scaleY = availableHeight / baseHeight;
+            let scale = Math.min(scaleX, scaleY);
+            
+            if (isMobile) {
+                scale = Math.min(Math.max(scale, 0.4), 1.0);
+            } else {
+                scale = Math.min(Math.max(scale, 0.8), 1.2);
+            }
+            
+            // Apply dimensions
+            const displayWidth = Math.round(baseWidth * scale);
+            const displayHeight = Math.round(baseHeight * scale);
+            
+            canvas.style.setProperty('width', displayWidth + 'px', 'important');
+            canvas.style.setProperty('height', displayHeight + 'px', 'important');
+            canvas.width = baseWidth;
+            canvas.height = baseHeight;
+            
+            // Draw test pattern
+            ctx.fillStyle = '#FFE5E5';
+            ctx.fillRect(0, 0, baseWidth, baseHeight);
+            
+            // Draw grid
+            ctx.strokeStyle = '#FFB6C1';
+            ctx.lineWidth = 2;
+            for (let i = 0; i <= baseWidth; i += 100) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, baseHeight);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= baseHeight; i += 100) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(baseWidth, i);
+                ctx.stroke();
+            }
+            
+            // Draw center cross
+            ctx.strokeStyle = '#FF1493';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(baseWidth/2, 0);
+            ctx.lineTo(baseWidth/2, baseHeight);
+            ctx.moveTo(0, baseHeight/2);
+            ctx.lineTo(baseWidth, baseHeight/2);
+            ctx.stroke();
+            
+            // Draw text
+            ctx.fillStyle = '#FF1493';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Canvas Test', baseWidth/2, baseHeight/2 - 30);
+            
+            ctx.font = '24px Arial';
+            ctx.fillText(`${displayWidth}x${displayHeight}px`, baseWidth/2, baseHeight/2 + 20);
+            ctx.fillText(`Scale: ${(scale * 100).toFixed(0)}%`, baseWidth/2, baseHeight/2 + 50);
+            
+            // Update info
+            document.getElementById('viewport').textContent = 
+                `${window.innerWidth}x${window.innerHeight}px`;
+            document.getElementById('containerSize').textContent = 
+                `${Math.round(containerRect.width)}x${Math.round(containerRect.height)}px`;
+            document.getElementById('canvasDisplay').textContent = 
+                `${displayWidth}x${displayHeight}px`;
+            document.getElementById('canvasInternal').textContent = 
+                `${canvas.width}x${canvas.height}px`;
+            document.getElementById('scale').textContent = 
+                `${(scale * 100).toFixed(1)}% (scaleX: ${(scaleX * 100).toFixed(0)}%, scaleY: ${(scaleY * 100).toFixed(0)}%)`;
+            document.getElementById('device').textContent = 
+                `${isMobile ? 'Mobile' : 'Desktop'} - ${isLandscape ? 'Landscape' : 'Portrait'}`;
+        }
+        
+        // Initial draw
+        updateCanvas();
+        
+        // Update on resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateCanvas, 100);
+        });
+        
+        window.addEventListener('orientationchange', () => {
+            setTimeout(updateCanvas, 200);
+        });
+    </script>
+</body>
+</html>
+

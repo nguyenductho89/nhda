@@ -87,10 +87,11 @@ class WinScreen {
         ctx.fillStyle = '#C71585';
         ctx.fillText('Tình yêu đã chiến thắng!', width/2, titleY + 40);
 
-        // Wedding invitation card
-        const cardY = titleY + 80;
-        const cardWidth = 500;
-        const cardHeight = 260;
+        // Wedding invitation card (responsive)
+        const isMobile = width < 768;
+        const cardY = titleY + (isMobile ? 70 : 80);
+        const cardWidth = Math.min(isMobile ? width - 60 : 500, width - 60);
+        const cardHeight = isMobile ? 220 : 260;
         const cardX = width/2 - cardWidth/2;
 
         // Card background
@@ -108,27 +109,46 @@ class WinScreen {
         this.drawHeart(ctx, cardX + 20, cardY + cardHeight - 20, 10);
         this.drawHeart(ctx, cardX + cardWidth - 20, cardY + cardHeight - 20, 10);
 
-        // Wedding information
+        // Wedding information (responsive font sizes)
         ctx.fillStyle = '#8B008B';
-        ctx.font = 'bold 26px Georgia, serif';
-        ctx.fillText('💒 Thiệp Mời Đám Cưới 💒', width/2, cardY + 35);
+        const titleSize = isMobile ? 20 : 26;
+        ctx.font = `bold ${titleSize}px Georgia, serif`;
+        ctx.fillText('💒 Thiệp Mời Đám Cưới 💒', width/2, cardY + (isMobile ? 30 : 35));
 
-        ctx.font = 'bold 22px Georgia, serif';
+        const nameSize = isMobile ? 18 : 22;
+        ctx.font = `bold ${nameSize}px Georgia, serif`;
         ctx.fillStyle = '#FF1493';
-        ctx.fillText(`${this.weddingInfo.groomName} ❤️ ${this.weddingInfo.brideName}`, width/2, cardY + 70);
+        ctx.fillText(`${this.weddingInfo.groomName} ❤️ ${this.weddingInfo.brideName}`, width/2, cardY + (isMobile ? 58 : 70));
 
-        ctx.font = '18px Arial';
+        const infoSize = isMobile ? 14 : 18;
+        ctx.font = `${infoSize}px Arial`;
         ctx.fillStyle = '#555';
-        const infoY = cardY + 105;
+        const infoY = cardY + (isMobile ? 85 : 105);
         ctx.fillText(`📅 ${this.weddingInfo.date} | ⏰ ${this.weddingInfo.time}`, width/2, infoY);
         
-        ctx.font = '16px Arial';
-        ctx.fillText(`📍 ${this.weddingInfo.venue}`, width/2, infoY + 30);
-        ctx.fillText(this.weddingInfo.address, width/2, infoY + 52);
+        const detailSize = isMobile ? 13 : 16;
+        ctx.font = `${detailSize}px Arial`;
+        
+        if (isMobile) {
+            // Shorter text for mobile
+            const venueShort = this.weddingInfo.venue.length > 30 
+                ? this.weddingInfo.venue.substring(0, 27) + '...' 
+                : this.weddingInfo.venue;
+            ctx.fillText(`📍 ${venueShort}`, width/2, infoY + 25);
+            
+            const addressShort = this.weddingInfo.address.length > 35 
+                ? this.weddingInfo.address.substring(0, 32) + '...' 
+                : this.weddingInfo.address;
+            ctx.fillText(addressShort, width/2, infoY + 45);
+        } else {
+            ctx.fillText(`📍 ${this.weddingInfo.venue}`, width/2, infoY + 30);
+            ctx.fillText(this.weddingInfo.address, width/2, infoY + 52);
+        }
 
-        ctx.font = 'italic 16px Georgia, serif';
+        const msgSize = isMobile ? 14 : 16;
+        ctx.font = `italic ${msgSize}px Georgia, serif`;
         ctx.fillStyle = '#C71585';
-        ctx.fillText(this.weddingInfo.message, width/2, infoY + 85);
+        ctx.fillText(this.weddingInfo.message, width/2, infoY + (isMobile ? 70 : 85));
 
         // Additional info at bottom
         const bottomY = height - 40;
