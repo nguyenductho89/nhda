@@ -74,6 +74,9 @@ class MobileOptimizer {
         
         // Additional mobile UI hiding
         this.setupMobileUIHiding();
+        
+        // Inject aggressive CSS to hide browser UI
+        this.injectMobileCSS();
     }
     
     updateViewportHeight() {
@@ -222,14 +225,74 @@ class MobileOptimizer {
         console.log('📱 Mobile UI hiding setup complete');
     }
     
+    injectMobileCSS() {
+        // Inject aggressive CSS to force hide browser UI
+        const style = document.createElement('style');
+        style.id = 'mobile-ui-hide';
+        style.textContent = `
+            /* Force hide mobile browser UI */
+            html, body {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                height: calc(var(--vh, 1vh) * 100) !important;
+                overflow: hidden !important;
+                overscroll-behavior: none !important;
+                -webkit-overflow-scrolling: touch !important;
+                -webkit-touch-callout: none !important;
+                -webkit-user-select: none !important;
+                user-select: none !important;
+            }
+            
+            /* Hide address bar on mobile */
+            @media (max-width: 768px) {
+                html, body {
+                    position: fixed !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    bottom: 0 !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    height: calc(var(--vh, 1vh) * 100) !important;
+                    overflow: hidden !important;
+                }
+            }
+            
+            /* Landscape specific */
+            @media (orientation: landscape) and (max-width: 768px) {
+                html, body {
+                    position: fixed !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    bottom: 0 !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    height: calc(var(--vh, 1vh) * 100) !important;
+                    overflow: hidden !important;
+                    overscroll-behavior: none !important;
+                }
+            }
+        `;
+        
+        document.head.appendChild(style);
+        console.log('📱 Injected aggressive mobile CSS');
+    }
+    
     hideBrowserUI() {
-        // Multiple methods to hide browser UI
+        // Multiple aggressive methods to hide browser UI
         try {
             // Method 1: Scroll to hide address bar
             window.scrollTo(0, 1);
             
             // Method 2: Set body height to screen height
             document.body.style.height = window.screen.height + 'px';
+            document.documentElement.style.height = window.screen.height + 'px';
             
             // Method 3: Force viewport update
             setTimeout(() => {
@@ -238,17 +301,41 @@ class MobileOptimizer {
                 
                 // Method 4: Try to trigger resize
                 window.dispatchEvent(new Event('resize'));
-            }, 100);
-            
-            // Method 5: Additional scroll attempts
-            setTimeout(() => {
+                
+                // Method 5: Additional scroll attempts
                 window.scrollTo(0, 1);
                 setTimeout(() => {
                     window.scrollTo(0, 0);
                 }, 50);
+            }, 100);
+            
+            // Method 6: Continuous scroll attempts
+            let scrollAttempts = 0;
+            const scrollInterval = setInterval(() => {
+                if (scrollAttempts >= 10) {
+                    clearInterval(scrollInterval);
+                    return;
+                }
+                
+                window.scrollTo(0, 1);
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                }, 50);
+                
+                scrollAttempts++;
             }, 200);
             
-            console.log('📱 Attempted to hide browser UI with multiple methods');
+            // Method 7: Force CSS properties
+            document.body.style.position = 'fixed';
+            document.body.style.top = '0';
+            document.body.style.left = '0';
+            document.body.style.right = '0';
+            document.body.style.bottom = '0';
+            document.body.style.width = '100vw';
+            document.body.style.height = '100vh';
+            document.body.style.height = 'calc(var(--vh, 1vh) * 100)';
+            
+            console.log('📱 Attempted to hide browser UI with aggressive methods');
         } catch (error) {
             console.warn('Error hiding browser UI:', error);
         }

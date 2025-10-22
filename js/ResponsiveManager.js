@@ -78,38 +78,25 @@ class ResponsiveManager {
         let availableWidth, availableHeight;
         
         if (isMobile && isLandscape) {
-            // Mobile landscape - calculate precisely for Chrome/Safari
+            // Mobile landscape - maximize space usage
             const gameInfo = document.querySelector('.game-info');
             const mobileControls = document.querySelector('.mobile-controls');
             
             const headerHeight = gameInfo ? gameInfo.offsetHeight : 0;
             const controlsHeight = mobileControls ? mobileControls.offsetHeight : 0;
             
-            // Account for container padding and borders
-            const containerStyles = window.getComputedStyle(container);
-            const containerPaddingTop = parseFloat(containerStyles.paddingTop) || 0;
-            const containerPaddingBottom = parseFloat(containerStyles.paddingBottom) || 0;
-            const containerPaddingLeft = parseFloat(containerStyles.paddingLeft) || 0;
-            const containerPaddingRight = parseFloat(containerStyles.paddingRight) || 0;
-            
-            // Mobile browsers: be more aggressive with space usage
-            const verticalPadding = containerPaddingTop + containerPaddingBottom + (isFullscreen ? 5 : 10);
-            const horizontalPadding = containerPaddingLeft + containerPaddingRight + (isFullscreen ? 5 : 10);
+            // Minimal padding for landscape
+            const verticalPadding = 5;
+            const horizontalPadding = 5;
             
             availableWidth = containerWidth - horizontalPadding;
             availableHeight = viewportHeight - headerHeight - controlsHeight - verticalPadding;
             
-            // In fullscreen mode, be even more aggressive with space usage
-            if (isFullscreen) {
-                availableHeight = Math.max(availableHeight, 200);
-                availableWidth = Math.max(availableWidth, 400);
-            } else {
-                // Ensure minimum playable size but be less conservative
-                availableHeight = Math.max(availableHeight, 180);
-                availableWidth = Math.max(availableWidth, 360);
-            }
+            // Be very aggressive with space usage in landscape
+            availableHeight = Math.max(availableHeight, 150);
+            availableWidth = Math.max(availableWidth, 300);
             
-            console.log(`📐 Mobile landscape: viewport=${viewportHeight}px, available=${availableHeight}px (header=${headerHeight}, controls=${controlsHeight}, padding=${verticalPadding}, fullscreen=${isFullscreen})`);
+            console.log(`📐 Mobile landscape: viewport=${viewportHeight}px, available=${availableHeight}px (header=${headerHeight}, controls=${controlsHeight}, padding=${verticalPadding})`);
         } else if (isMobile && !isLandscape) {
             // Mobile portrait - show orientation message
             availableWidth = containerWidth - 40;
