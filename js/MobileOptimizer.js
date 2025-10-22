@@ -8,8 +8,8 @@ class MobileOptimizer {
     }
     
     detectMobile() {
-        // Check user agent first
-        const userAgentMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        // Check user agent first - be more comprehensive
+        const userAgentMobile = /iPhone|iPad|iPod|Android|Mobile|Tablet|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
         // Check screen size and touch capability - be more aggressive
         const screenWidth = window.screen.width;
@@ -17,19 +17,24 @@ class MobileOptimizer {
         const innerWidth = window.innerWidth;
         const innerHeight = window.innerHeight;
         
-        // Mobile if any dimension is mobile-sized
-        const screenMobile = screenWidth <= 1024 || screenHeight <= 1024;
-        const innerMobile = innerWidth <= 1024 || innerHeight <= 1024;
+        // Mobile if any dimension is mobile-sized (lowered thresholds)
+        const screenMobile = screenWidth <= 1200 || screenHeight <= 1200;
+        const innerMobile = innerWidth <= 1200 || innerHeight <= 1200;
         
-        // Touch capability
-        const touchMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        // Touch capability - more comprehensive check
+        const touchMobile = 'ontouchstart' in window || 
+                           navigator.maxTouchPoints > 0 || 
+                           window.DocumentTouch && document instanceof window.DocumentTouch;
         
         // Additional mobile indicators
         const isMobileDevice = userAgentMobile || 
                               (screenMobile && touchMobile) || 
                               (innerMobile && touchMobile) ||
-                              (screenWidth <= 768 || screenHeight <= 768) ||
-                              (innerWidth <= 768 || innerHeight <= 768);
+                              (screenWidth <= 900 || screenHeight <= 900) ||
+                              (innerWidth <= 900 || innerHeight <= 900) ||
+                              // Force mobile if touch and reasonable size
+                              (touchMobile && (screenWidth <= 1400 || screenHeight <= 1400)) ||
+                              (touchMobile && (innerWidth <= 1400 || innerHeight <= 1400));
         
         console.log(`📱 Mobile detection: ${isMobileDevice} (UA: ${userAgentMobile}, Screen: ${screenWidth}x${screenHeight}, Inner: ${innerWidth}x${innerHeight}, Touch: ${touchMobile})`);
         
@@ -38,7 +43,46 @@ class MobileOptimizer {
     
     updateMobileDetection() {
         this.isMobile = this.detectMobile();
-        console.log(`📱 Mobile detection updated: ${this.isMobile} (UA: ${/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}, Screen: ${window.screen.width}x${window.screen.height}, Touch: ${'ontouchstart' in window})`);
+        console.log(`📱 Mobile detection updated: ${this.isMobile} (UA: ${/iPhone|iPad|iPod|Android|Mobile|Tablet/i.test(navigator.userAgent)}, Screen: ${window.screen.width}x${window.screen.height}, Touch: ${'ontouchstart' in window})`);
+    }
+    
+    // Force mobile mode for testing or specific cases
+    forceMobileMode(force = true) {
+        this.isMobile = force;
+        console.log(`📱 Mobile mode ${force ? 'forced ON' : 'forced OFF'}`);
+    }
+    
+    // Debug function to test mobile detection
+    debugMobileDetection() {
+        const userAgent = navigator.userAgent;
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        const innerWidth = window.innerWidth;
+        const innerHeight = window.innerHeight;
+        const touchSupport = 'ontouchstart' in window;
+        const maxTouchPoints = navigator.maxTouchPoints;
+        const documentTouch = window.DocumentTouch && document instanceof window.DocumentTouch;
+        
+        console.log('🔍 Mobile Detection Debug:');
+        console.log(`  User Agent: ${userAgent}`);
+        console.log(`  Screen: ${screenWidth}x${screenHeight}`);
+        console.log(`  Inner: ${innerWidth}x${innerHeight}`);
+        console.log(`  Touch Support: ${touchSupport}`);
+        console.log(`  Max Touch Points: ${maxTouchPoints}`);
+        console.log(`  Document Touch: ${documentTouch}`);
+        console.log(`  Current Detection: ${this.isMobile}`);
+        
+        return {
+            userAgent,
+            screenWidth,
+            screenHeight,
+            innerWidth,
+            innerHeight,
+            touchSupport,
+            maxTouchPoints,
+            documentTouch,
+            isMobile: this.isMobile
+        };
     }
     
     init() {
@@ -91,6 +135,10 @@ class MobileOptimizer {
         
         // Inject aggressive CSS to hide browser UI
         this.injectMobileCSS();
+        
+        // Expose debug functions globally for testing
+        window.debugMobile = () => this.debugMobileDetection();
+        window.forceMobile = (force = true) => this.forceMobileMode(force);
     }
     
     updateViewportHeight() {

@@ -74,17 +74,22 @@ class ResponsiveManager {
         if (window.mobileOptimizer) {
             isMobile = window.mobileOptimizer.isMobile;
         } else {
-            // Enhanced fallback detection
-            const userAgentMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            const screenMobile = window.screen.width <= 1024 || window.screen.height <= 1024;
-            const innerMobile = window.innerWidth <= 1024 || window.innerHeight <= 1024;
-            const touchMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            // Enhanced fallback detection - same logic as MobileOptimizer
+            const userAgentMobile = /iPhone|iPad|iPod|Android|Mobile|Tablet|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const screenMobile = window.screen.width <= 1200 || window.screen.height <= 1200;
+            const innerMobile = window.innerWidth <= 1200 || window.innerHeight <= 1200;
+            const touchMobile = 'ontouchstart' in window || 
+                               navigator.maxTouchPoints > 0 || 
+                               window.DocumentTouch && document instanceof window.DocumentTouch;
             
             isMobile = userAgentMobile || 
                       (screenMobile && touchMobile) || 
                       (innerMobile && touchMobile) ||
-                      (window.screen.width <= 768 || window.screen.height <= 768) ||
-                      (window.innerWidth <= 768 || window.innerHeight <= 768);
+                      (window.screen.width <= 900 || window.screen.height <= 900) ||
+                      (window.innerWidth <= 900 || window.innerHeight <= 900) ||
+                      // Force mobile if touch and reasonable size
+                      (touchMobile && (window.screen.width <= 1400 || window.screen.height <= 1400)) ||
+                      (touchMobile && (window.innerWidth <= 1400 || window.innerHeight <= 1400));
         }
         const isLandscape = window.matchMedia('(orientation: landscape)').matches;
         

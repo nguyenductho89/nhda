@@ -518,8 +518,8 @@ body::before {
     }
 }
 
-/* Show mobile controls on all mobile devices with side layout */
-@media (max-width: 1024px), (max-height: 1024px), (orientation: landscape) and (max-width: 1366px) {
+/* Show mobile controls on all mobile devices with side layout - More aggressive */
+@media (max-width: 1400px), (max-height: 1400px), (orientation: landscape) and (max-width: 1600px) {
     .mobile-controls {
         display: flex !important;
         visibility: visible !important;
