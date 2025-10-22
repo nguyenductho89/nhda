@@ -151,7 +151,17 @@ class MobileOptimizer {
         }
         
         // Calculate navigation bar height
-        const navbarHeight = Math.max(0, window.innerHeight - visualVh);
+        let navbarHeight = Math.max(0, window.innerHeight - visualVh);
+        
+        // Add extra compensation for landscape mode where navbar persists
+        const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+        if (isLandscape && this.isMobile) {
+            // In landscape, mobile browsers often keep navbar visible
+            // Add extra 30-50px compensation for persistent navigation bars
+            const extraCompensation = 40;
+            navbarHeight = Math.max(navbarHeight, extraCompensation);
+            console.log(`📱 Landscape mode: adding ${extraCompensation}px extra navbar compensation`);
+        }
         
         // Set CSS variables for use in stylesheets
         document.documentElement.style.setProperty('--vh', `${visualVh * 0.01}px`);
@@ -161,7 +171,7 @@ class MobileOptimizer {
         // Force body height to visual viewport height
         document.body.style.height = visualVh + 'px';
         
-        console.log(`📱 Viewport updated: innerHeight=${window.innerHeight}px, visualHeight=${visualVh}px, navbarHeight=${navbarHeight}px`);
+        console.log(`📱 Viewport updated: innerHeight=${window.innerHeight}px, visualHeight=${visualVh}px, navbarHeight=${navbarHeight}px, landscape=${isLandscape}`);
     }
     
     getViewportHeight() {
@@ -172,10 +182,19 @@ class MobileOptimizer {
     }
     
     getNavbarHeight() {
+        let navbarHeight = 0;
         if (window.visualViewport) {
-            return window.innerHeight - window.visualViewport.height;
+            navbarHeight = window.innerHeight - window.visualViewport.height;
         }
-        return 0;
+        
+        // Add extra compensation for landscape mode
+        const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+        if (isLandscape && this.isMobile) {
+            const extraCompensation = 40;
+            navbarHeight = Math.max(navbarHeight, extraCompensation);
+        }
+        
+        return navbarHeight;
     }
     
     

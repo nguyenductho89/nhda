@@ -98,26 +98,27 @@ class ResponsiveManager {
         // Calculate available space - always use landscape layout
         let availableWidth, availableHeight;
         
-        // Always use landscape responsive layout for all devices
-        const gameInfo = document.querySelector('.game-info');
-        const headerHeight = gameInfo ? gameInfo.offsetHeight : 0;
-        
+        // No header anymore - calculate available space directly
         // Account for navbar height and side controls
-        const navbarCompensation = navbarHeight;
+        // Add aggressive compensation for mobile navbar in landscape
+        const navbarCompensation = isMobile && isLandscape ? 
+            Math.max(navbarHeight * 2, navbarHeight + 40) : // Double navbar or add 40px minimum
+            navbarHeight;
+        
         const sideControlsWidth = 140; // Space for side controls (60px + gap + margin)
         
-        // More reasonable padding for landscape
-        const verticalPadding = 20; // Increased padding to prevent cutoff
+        // Aggressive padding for landscape to prevent navbar cutoff
+        const verticalPadding = isMobile && isLandscape ? 80 : 20; // Much larger padding in mobile landscape
         const horizontalPadding = sideControlsWidth; // Reserve space for side controls
         
         availableWidth = containerWidth - horizontalPadding;
-        availableHeight = viewportHeight - headerHeight - verticalPadding - navbarCompensation;
+        availableHeight = viewportHeight - verticalPadding - navbarCompensation;
         
         // Ensure minimum space but don't be too aggressive
         availableHeight = Math.max(availableHeight, 250); // Increased minimum height
         availableWidth = Math.max(availableWidth, 400);
         
-        console.log(`📐 Universal landscape: viewport=${viewportHeight}px, navbar=${navbarHeight}px, available=${availableHeight}x${availableWidth}px (header=${headerHeight}, sideControls=${sideControlsWidth}px)`);
+        console.log(`📐 Universal landscape: viewport=${viewportHeight}px, navbar=${navbarHeight}px, navbarComp=${navbarCompensation}px, available=${availableHeight}x${availableWidth}px (padding=${verticalPadding}, sideControls=${sideControlsWidth}px)`);
         
         // Calculate optimal scale maintaining aspect ratio
         const scaleX = availableWidth / this.baseWidth;
