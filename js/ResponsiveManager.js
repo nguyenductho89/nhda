@@ -25,7 +25,10 @@ class ResponsiveManager {
         }
         
         // Listen for fullscreen changes
-        document.addEventListener('fullscreenchange', () => this.resize());
+        document.addEventListener('fullscreenchange', () => {
+            console.log('🖥️ Fullscreen changed:', !!document.fullscreenElement);
+            setTimeout(() => this.resize(), 100);
+        });
     }
     
     debouncedResize() {
@@ -48,7 +51,12 @@ class ResponsiveManager {
         
         // Use MobileOptimizer for accurate viewport height (excludes browser UI)
         let viewportHeight;
-        if (window.mobileOptimizer) {
+        const isFullscreen = !!document.fullscreenElement;
+        
+        if (isFullscreen) {
+            // In fullscreen mode, use screen dimensions
+            viewportHeight = window.screen.height;
+        } else if (window.mobileOptimizer) {
             viewportHeight = window.mobileOptimizer.getViewportHeight();
         } else if (window.visualViewport) {
             viewportHeight = window.visualViewport.height;
@@ -78,17 +86,23 @@ class ResponsiveManager {
             const containerPaddingRight = parseFloat(containerStyles.paddingRight) || 0;
             
             // Mobile browsers: be more aggressive with space usage
-            const verticalPadding = containerPaddingTop + containerPaddingBottom + 10;
-            const horizontalPadding = containerPaddingLeft + containerPaddingRight + 10;
+            const verticalPadding = containerPaddingTop + containerPaddingBottom + (isFullscreen ? 5 : 10);
+            const horizontalPadding = containerPaddingLeft + containerPaddingRight + (isFullscreen ? 5 : 10);
             
             availableWidth = containerWidth - horizontalPadding;
             availableHeight = viewportHeight - headerHeight - controlsHeight - verticalPadding;
             
-            // Ensure minimum playable size but be less conservative
-            availableHeight = Math.max(availableHeight, 180);
-            availableWidth = Math.max(availableWidth, 360);
+            // In fullscreen mode, be even more aggressive with space usage
+            if (isFullscreen) {
+                availableHeight = Math.max(availableHeight, 200);
+                availableWidth = Math.max(availableWidth, 400);
+            } else {
+                // Ensure minimum playable size but be less conservative
+                availableHeight = Math.max(availableHeight, 180);
+                availableWidth = Math.max(availableWidth, 360);
+            }
             
-            console.log(`📐 Mobile landscape: viewport=${viewportHeight}px, available=${availableHeight}px (header=${headerHeight}, controls=${controlsHeight}, padding=${verticalPadding})`);
+            console.log(`📐 Mobile landscape: viewport=${viewportHeight}px, available=${availableHeight}px (header=${headerHeight}, controls=${controlsHeight}, padding=${verticalPadding}, fullscreen=${isFullscreen})`);
         } else if (isMobile && !isLandscape) {
             // Mobile portrait - show orientation message
             availableWidth = containerWidth - 40;

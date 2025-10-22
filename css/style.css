@@ -225,6 +225,38 @@ body::before {
     gap: 15px;
 }
 
+/* Fullscreen button styles */
+.fullscreen-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #FF69B4, #FFB6C1);
+    border: 2px solid #C71585;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 3px 10px rgba(255, 105, 180, 0.3);
+    transition: all 0.2s;
+    touch-action: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    display: none; /* Hidden by default, shown by JavaScript */
+}
+
+.fullscreen-btn:active {
+    transform: scale(0.95);
+    background: linear-gradient(135deg, #FF1493, #FF69B4);
+}
+
+.fullscreen-btn small {
+    font-size: 10px;
+}
+
 .controls-left,
 .controls-right {
     display: flex;
@@ -333,7 +365,7 @@ body::before {
     
     /* Show mobile controls on touch devices */
     .mobile-controls {
-        display: flex;
+        display: flex !important;
         margin-top: 5px;
         flex-shrink: 0;
     }
@@ -402,6 +434,22 @@ body::before {
         font-size: 0.9em;
         padding: 10px 12px;
     }
+}
+
+/* Show mobile controls on all mobile devices */
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex !important;
+    }
+    
+    .desktop-controls {
+        display: none;
+    }
+    
+    .mobile-controls-text {
+        display: block;
+    }
+    
 }
 
 /* Portrait orientation */

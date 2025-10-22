@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, minimal-ui">
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#FFB6C1">
+    <meta name="format-detection" content="telephone=no">
+    <title>Mobile Test - Wedding Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFB6C1 50%, #DDA0DD 100%);
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.3);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border-left: 4px solid #FF69B4;
+        }
+        
+        .test-item h3 {
+            margin: 0 0 10px 0;
+            color: #C71585;
+        }
+        
+        .test-result {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .pass { color: green; }
+        .fail { color: red; }
+        .info { color: blue; }
+        
+        button {
+            background: linear-gradient(135deg, #FF69B4, #FFB6C1);
+            border: 2px solid #C71585;
+            border-radius: 10px;
+            color: white;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .mobile-controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            width: 70px;
+            height: 70px;
+            font-size: 24px;
+            background: linear-gradient(135deg, #FF69B4, #FFB6C1);
+            border: 3px solid #C71585;
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+            transition: all 0.2s;
+            font-weight: bold;
+            touch-action: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .control-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(255, 105, 180, 0.5);
+            background: linear-gradient(135deg, #FF1493, #FF69B4);
+        }
+        
+        .jump-btn {
+            width: 90px;
+            height: 90px;
+            font-size: 28px;
+            background: linear-gradient(135deg, #FF1493, #C71585);
+        }
+        
+        .fullscreen-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FF69B4, #FFB6C1);
+            border: 2px solid #C71585;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 3px 10px rgba(255, 105, 180, 0.3);
+            transition: all 0.2s;
+            touch-action: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .fullscreen-btn:active {
+            transform: scale(0.95);
+            background: linear-gradient(135deg, #FF1493, #FF69B4);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: flex !important;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .mobile-controls {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>📱 Mobile Test - Wedding Game</h1>
+        
+        <div class="test-item">
+            <h3>Device Detection</h3>
+            <div id="deviceInfo">Checking...</div>
+        </div>
+        
+        <div class="test-item">
+            <h3>Viewport Information</h3>
+            <div id="viewportInfo">Checking...</div>
+        </div>
+        
+        <div class="test-item">
+            <h3>Fullscreen Support</h3>
+            <div id="fullscreenInfo">Checking...</div>
+            <button onclick="testFullscreen()">Test Fullscreen</button>
+        </div>
+        
+        <div class="test-item">
+            <h3>Mobile Controls</h3>
+            <div id="controlsInfo">Checking...</div>
+            <div class="mobile-controls">
+                <div style="display: flex; gap: 10px;">
+                    <button class="control-btn" id="leftBtn">◀</button>
+                    <button class="control-btn" id="rightBtn">▶</button>
+                </div>
+                <div>
+                    <button class="control-btn jump-btn" id="jumpBtn">↑<br><small>Nhảy</small></button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-item">
+            <h3>Touch Events</h3>
+            <div id="touchInfo">Touch the buttons above to test...</div>
+        </div>
+        
+        <div class="test-item">
+            <h3>Orientation</h3>
+            <div id="orientationInfo">Checking...</div>
+        </div>
+        
+        <div class="test-item">
+            <h3>Browser Features</h3>
+            <div id="browserInfo">Checking...</div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="runAllTests()">🔄 Run All Tests</button>
+            <button onclick="window.location.href='index.html'">🎮 Go to Game</button>
+        </div>
+    </div>
+    
+    <script>
+        let touchCount = 0;
+        
+        function updateDeviceInfo() {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const isChrome = /Chrome/i.test(navigator.userAgent);
+            const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent);
+            
+            document.getElementById('deviceInfo').innerHTML = `
+                <div class="test-result ${isMobile ? 'pass' : 'info'}">Mobile Device: ${isMobile ? 'Yes' : 'No'}</div>
+                <div class="test-result ${isChrome ? 'pass' : 'info'}">Chrome: ${isChrome ? 'Yes' : 'No'}</div>
+                <div class="test-result ${isSafari ? 'pass' : 'info'}">Safari: ${isSafari ? 'Yes' : 'No'}</div>
+                <div class="test-result info">User Agent: ${navigator.userAgent}</div>
+            `;
+        }
+        
+        function updateViewportInfo() {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const visualVw = window.visualViewport ? window.visualViewport.width : 'N/A';
+            const visualVh = window.visualViewport ? window.visualViewport.height : 'N/A';
+            const screenW = window.screen.width;
+            const screenH = window.screen.height;
+            
+            document.getElementById('viewportInfo').innerHTML = `
+                <div class="test-result info">Window: ${vw} x ${vh}</div>
+                <div class="test-result info">Visual Viewport: ${visualVw} x ${visualVh}</div>
+                <div class="test-result info">Screen: ${screenW} x ${screenH}</div>
+                <div class="test-result info">Device Pixel Ratio: ${window.devicePixelRatio}</div>
+            `;
+        }
+        
+        function updateFullscreenInfo() {
+            const hasFullscreen = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled || 
+                                   document.mozFullScreenEnabled || document.msFullscreenEnabled);
+            const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || 
+                                  document.mozFullScreenElement || document.msFullscreenElement);
+            
+            document.getElementById('fullscreenInfo').innerHTML = `
+                <div class="test-result ${hasFullscreen ? 'pass' : 'fail'}">Fullscreen Supported: ${hasFullscreen ? 'Yes' : 'No'}</div>
+                <div class="test-result ${isFullscreen ? 'pass' : 'info'}">Currently Fullscreen: ${isFullscreen ? 'Yes' : 'No'}</div>
+            `;
+        }
+        
+        function updateControlsInfo() {
+            const leftBtn = document.getElementById('leftBtn');
+            const rightBtn = document.getElementById('rightBtn');
+            const jumpBtn = document.getElementById('jumpBtn');
+            const controlsVisible = window.getComputedStyle(leftBtn).display !== 'none';
+            
+            document.getElementById('controlsInfo').innerHTML = `
+                <div class="test-result ${controlsVisible ? 'pass' : 'fail'}">Controls Visible: ${controlsVisible ? 'Yes' : 'No'}</div>
+                <div class="test-result info">Left Button: ${leftBtn ? 'Found' : 'Missing'}</div>
+                <div class="test-result info">Right Button: ${rightBtn ? 'Found' : 'Missing'}</div>
+                <div class="test-result info">Jump Button: ${jumpBtn ? 'Found' : 'Missing'}</div>
+            `;
+        }
+        
+        function updateOrientationInfo() {
+            const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+            const orientation = screen.orientation ? screen.orientation.type : 'Unknown';
+            
+            document.getElementById('orientationInfo').innerHTML = `
+                <div class="test-result ${isLandscape ? 'pass' : 'info'}">Landscape: ${isLandscape ? 'Yes' : 'No'}</div>
+                <div class="test-result info">Orientation: ${orientation}</div>
+                <div class="test-result info">Width > Height: ${window.innerWidth > window.innerHeight ? 'Yes' : 'No'}</div>
+            `;
+        }
+        
+        function updateBrowserInfo() {
+            const hasVisualViewport = !!window.visualViewport;
+            const hasTouch = 'ontouchstart' in window;
+            const hasPointer = 'onpointerdown' in window;
+            const hasPassiveEvents = (() => {
+                let supportsPassive = false;
+                try {
+                    const opts = Object.defineProperty({}, 'passive', {
+                        get: function() {
+                            supportsPassive = true;
+                        }
+                    });
+                    window.addEventListener('testPassive', null, opts);
+                    window.removeEventListener('testPassive', null, opts);
+                } catch (e) {}
+                return supportsPassive;
+            })();
+            
+            document.getElementById('browserInfo').innerHTML = `
+                <div class="test-result ${hasVisualViewport ? 'pass' : 'fail'}">Visual Viewport API: ${hasVisualViewport ? 'Yes' : 'No'}</div>
+                <div class="test-result ${hasTouch ? 'pass' : 'fail'}">Touch Events: ${hasTouch ? 'Yes' : 'No'}</div>
+                <div class="test-result ${hasPointer ? 'pass' : 'fail'}">Pointer Events: ${hasPointer ? 'Yes' : 'No'}</div>
+                <div class="test-result ${hasPassiveEvents ? 'pass' : 'fail'}">Passive Events: ${hasPassiveEvents ? 'Yes' : 'No'}</div>
+            `;
+        }
+        
+        function testFullscreen() {
+            if (document.fullscreenElement || document.webkitFullscreenElement || 
+                document.mozFullScreenElement || document.msFullscreenElement) {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            } else {
+                // Enter fullscreen
+                const elem = document.documentElement;
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+            }
+        }
+        
+        function runAllTests() {
+            updateDeviceInfo();
+            updateViewportInfo();
+            updateFullscreenInfo();
+            updateControlsInfo();
+            updateOrientationInfo();
+            updateBrowserInfo();
+        }
+        
+        // Setup touch event testing
+        function setupTouchTesting() {
+            const buttons = ['leftBtn', 'rightBtn', 'jumpBtn'];
+            
+            buttons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        touchCount++;
+                        document.getElementById('touchInfo').innerHTML = `
+                            <div class="test-result pass">Touch Events Working!</div>
+                            <div class="test-result info">Touch Count: ${touchCount}</div>
+                            <div class="test-result info">Button: ${btnId}</div>
+                        `;
+                    });
+                    
+                    btn.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                    });
+                }
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            runAllTests();
+            setupTouchTesting();
+            
+            // Update on orientation change
+            window.addEventListener('orientationchange', () => {
+                setTimeout(runAllTests, 500);
+            });
+            
+            // Update on resize
+            window.addEventListener('resize', () => {
+                setTimeout(runAllTests, 100);
+            });
+            
+            // Update on fullscreen change
+            document.addEventListener('fullscreenchange', () => {
+                setTimeout(updateFullscreenInfo, 100);
+            });
+        });
+    </script>
+</body>
+</html>
