@@ -82,18 +82,24 @@ class MobileOptimizer {
     updateViewportHeight() {
         // Get the real viewport height
         let vh = window.innerHeight;
+        let visualVh = vh;
         
         if (window.visualViewport) {
-            vh = window.visualViewport.height;
+            visualVh = window.visualViewport.height;
         }
         
-        // Set CSS variable for use in stylesheets
-        document.documentElement.style.setProperty('--vh', `${vh * 0.01}px`);
+        // Calculate navigation bar height
+        const navbarHeight = window.innerHeight - visualVh;
         
-        // Force body height
-        document.body.style.height = vh + 'px';
+        // Set CSS variables for use in stylesheets
+        document.documentElement.style.setProperty('--vh', `${visualVh * 0.01}px`);
+        document.documentElement.style.setProperty('--navbar-height', `${navbarHeight}px`);
+        document.documentElement.style.setProperty('--available-height', `${visualVh}px`);
         
-        console.log(`📱 Viewport updated: ${vh}px (innerHeight: ${window.innerHeight})`);
+        // Force body height to visual viewport height
+        document.body.style.height = visualVh + 'px';
+        
+        console.log(`📱 Viewport updated: innerHeight=${window.innerHeight}px, visualHeight=${visualVh}px, navbarHeight=${navbarHeight}px`);
     }
     
     getViewportHeight() {
@@ -101,6 +107,13 @@ class MobileOptimizer {
             return window.visualViewport.height;
         }
         return window.innerHeight;
+    }
+    
+    getNavbarHeight() {
+        if (window.visualViewport) {
+            return window.innerHeight - window.visualViewport.height;
+        }
+        return 0;
     }
     
     addFullscreenButton() {

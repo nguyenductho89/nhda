@@ -196,11 +196,13 @@
             const visualVh = window.visualViewport ? window.visualViewport.height : 'N/A';
             const screenW = window.screen.width;
             const screenH = window.screen.height;
+            const navbarHeight = window.innerHeight - (window.visualViewport ? window.visualViewport.height : window.innerHeight);
             
             document.getElementById('viewportInfo').innerHTML = `
                 <div class="debug-result info">Window: ${vw} x ${vh}</div>
                 <div class="debug-result info">Visual: ${visualVw} x ${visualVh}</div>
                 <div class="debug-result info">Screen: ${screenW} x ${screenH}</div>
+                <div class="debug-result ${navbarHeight > 0 ? 'pass' : 'info'}">Navbar Height: ${navbarHeight}px</div>
                 <div class="debug-result info">DPR: ${window.devicePixelRatio}</div>
             `;
         }

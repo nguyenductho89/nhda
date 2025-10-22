@@ -51,17 +51,22 @@ class ResponsiveManager {
         
         // Use MobileOptimizer for accurate viewport height (excludes browser UI)
         let viewportHeight;
+        let navbarHeight = 0;
         const isFullscreen = !!document.fullscreenElement;
         
         if (isFullscreen) {
             // In fullscreen mode, use screen dimensions
             viewportHeight = window.screen.height;
+            navbarHeight = 0;
         } else if (window.mobileOptimizer) {
             viewportHeight = window.mobileOptimizer.getViewportHeight();
+            navbarHeight = window.mobileOptimizer.getNavbarHeight();
         } else if (window.visualViewport) {
             viewportHeight = window.visualViewport.height;
+            navbarHeight = window.innerHeight - viewportHeight;
         } else {
             viewportHeight = window.innerHeight;
+            navbarHeight = 0;
         }
         
         // Use MobileOptimizer for accurate mobile detection
@@ -78,25 +83,28 @@ class ResponsiveManager {
         let availableWidth, availableHeight;
         
         if (isMobile && isLandscape) {
-            // Mobile landscape - maximize space usage
+            // Mobile landscape - maximize space usage with navbar compensation
             const gameInfo = document.querySelector('.game-info');
             const mobileControls = document.querySelector('.mobile-controls');
             
             const headerHeight = gameInfo ? gameInfo.offsetHeight : 0;
             const controlsHeight = mobileControls ? mobileControls.offsetHeight : 0;
             
+            // Account for navbar height
+            const navbarCompensation = navbarHeight;
+            
             // Minimal padding for landscape
             const verticalPadding = 5;
             const horizontalPadding = 5;
             
             availableWidth = containerWidth - horizontalPadding;
-            availableHeight = viewportHeight - headerHeight - controlsHeight - verticalPadding;
+            availableHeight = viewportHeight - headerHeight - controlsHeight - verticalPadding - navbarCompensation;
             
             // Be very aggressive with space usage in landscape
             availableHeight = Math.max(availableHeight, 150);
             availableWidth = Math.max(availableWidth, 300);
             
-            console.log(`📐 Mobile landscape: viewport=${viewportHeight}px, available=${availableHeight}px (header=${headerHeight}, controls=${controlsHeight}, padding=${verticalPadding})`);
+            console.log(`📐 Mobile landscape: viewport=${viewportHeight}px, navbar=${navbarHeight}px, available=${availableHeight}px (header=${headerHeight}, controls=${controlsHeight}, padding=${verticalPadding})`);
         } else if (isMobile && !isLandscape) {
             // Mobile portrait - show orientation message
             availableWidth = containerWidth - 40;

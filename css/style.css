@@ -407,9 +407,9 @@ body::before {
         border-radius: 5px !important;
         flex-shrink: 1 !important;
         flex-grow: 1 !important;
-        /* Maximize canvas size */
+        /* Maximize canvas size with navbar compensation */
         max-width: 100% !important;
-        max-height: calc(100vh - 80px) !important;
+        max-height: calc(var(--available-height, 100vh) - 80px) !important;
         max-height: calc(calc(var(--vh, 1vh) * 100) - 80px) !important;
         object-fit: contain !important;
         margin: 0 auto !important;
