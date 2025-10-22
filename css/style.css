@@ -1,3 +1,10 @@
+/* Hide mobile controls text globally */
+.mobile-controls-text {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -320,7 +327,7 @@ body::before {
     }
     
     .game-container {
-        padding: 2px !important;
+        padding: 10px !important; /* Increased padding to prevent cutoff */
         margin: 0 !important;
         /* Full screen container */
         overflow: hidden !important;
@@ -339,29 +346,34 @@ body::before {
     }
     
     .game-info {
-        padding: 1px 3px !important;
-        margin-bottom: 1px !important;
+        padding: 8px 12px !important; /* Increased padding for better visibility */
+        margin-bottom: 8px !important; /* Increased margin */
         flex-shrink: 0 !important;
-        /* Minimize header even more */
-        background: rgba(255, 255, 255, 0.9) !important;
-        border-radius: 3px !important;
-        border: 1px solid rgba(255, 105, 180, 0.3) !important;
+        /* Better header visibility */
+        background: rgba(255, 255, 255, 0.95) !important;
+        border-radius: 8px !important;
+        border: 2px solid #FFB6C1 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
     }
     
     .game-info h1 {
-        font-size: 0.8em !important;
-        margin-bottom: 1px !important;
-        line-height: 1.0 !important;
+        font-size: 1.0em !important; /* Increased font size */
+        margin-bottom: 4px !important; /* Increased margin */
+        line-height: 1.2 !important; /* Better line height */
     }
     
     .stats {
-        font-size: 0.6em !important;
-        gap: 6px !important;
-        margin-bottom: 1px !important;
+        font-size: 0.8em !important; /* Increased font size */
+        gap: 8px !important; /* Increased gap */
+        margin-bottom: 4px !important; /* Increased margin */
     }
     
     .controls-info {
         display: none !important; /* Hide instructions completely */
+    }
+    
+    .mobile-controls-text {
+        display: none !important; /* Hide mobile controls text completely */
     }
     
     .game-message {
@@ -377,8 +389,8 @@ body::before {
         flex-grow: 1 !important;
         /* Use maximum available height with navbar compensation */
         max-width: calc(100% - 120px) !important; /* Leave space for side controls */
-        max-height: calc(var(--available-height, 100vh) - 20px) !important;
-        max-height: calc(calc(var(--vh, 1vh) * 100) - 20px) !important;
+        max-height: calc(var(--available-height, 100vh) - 60px) !important; /* Increased margin to prevent cutoff */
+        max-height: calc(calc(var(--vh, 1vh) * 100) - 60px) !important; /* Increased margin */
         object-fit: contain !important;
         margin: 0 auto !important;
         /* Center canvas with side controls */
@@ -527,6 +539,11 @@ body::before {
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
+    }
+    
+    /* Hide mobile controls text completely */
+    .mobile-controls-text {
+        display: none !important;
     }
     
     /* Side controls for all mobile orientations */

@@ -103,7 +103,7 @@ class MobileOptimizer {
         }
         
         // Calculate navigation bar height
-        const navbarHeight = window.innerHeight - visualVh;
+        const navbarHeight = Math.max(0, window.innerHeight - visualVh);
         
         // Set CSS variables for use in stylesheets
         document.documentElement.style.setProperty('--vh', `${visualVh * 0.01}px`);

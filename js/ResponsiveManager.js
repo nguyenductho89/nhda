@@ -94,22 +94,21 @@ class ResponsiveManager {
         if (isMobile && isLandscape) {
             // Mobile landscape - maximize space usage with side controls
             const gameInfo = document.querySelector('.game-info');
-            
             const headerHeight = gameInfo ? gameInfo.offsetHeight : 0;
             
             // Account for navbar height and side controls
             const navbarCompensation = navbarHeight;
             const sideControlsWidth = 140; // Space for side controls (60px + gap + margin)
             
-            // Minimal padding for landscape
-            const verticalPadding = 2; // Reduced padding
+            // More reasonable padding for landscape
+            const verticalPadding = 20; // Increased padding to prevent cutoff
             const horizontalPadding = sideControlsWidth; // Reserve space for side controls
             
             availableWidth = containerWidth - horizontalPadding;
             availableHeight = viewportHeight - headerHeight - verticalPadding - navbarCompensation;
             
-            // Be very aggressive with space usage in landscape
-            availableHeight = Math.max(availableHeight, 200);
+            // Ensure minimum space but don't be too aggressive
+            availableHeight = Math.max(availableHeight, 250); // Increased minimum height
             availableWidth = Math.max(availableWidth, 400);
             
             console.log(`📐 Mobile landscape: viewport=${viewportHeight}px, navbar=${navbarHeight}px, available=${availableHeight}x${availableWidth}px (header=${headerHeight}, sideControls=${sideControlsWidth}px)`);
