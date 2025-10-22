@@ -240,37 +240,6 @@ body::before {
     gap: 15px;
 }
 
-/* Fullscreen button styles */
-.fullscreen-btn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #FF69B4, #FFB6C1);
-    border: 2px solid #C71585;
-    border-radius: 10px;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 1000;
-    box-shadow: 0 3px 10px rgba(255, 105, 180, 0.3);
-    transition: all 0.2s;
-    touch-action: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    display: none; /* Hidden by default, shown by JavaScript */
-}
-
-.fullscreen-btn:active {
-    transform: scale(0.95);
-    background: linear-gradient(135deg, #FF1493, #FF69B4);
-}
-
-.fullscreen-btn small {
-    font-size: 10px;
-}
 
 .controls-left,
 .controls-right {
@@ -370,30 +339,29 @@ body::before {
     }
     
     .game-info {
-        padding: 2px 5px !important;
-        margin-bottom: 2px !important;
+        padding: 1px 3px !important;
+        margin-bottom: 1px !important;
         flex-shrink: 0 !important;
-        /* Minimize header */
+        /* Minimize header even more */
         background: rgba(255, 255, 255, 0.9) !important;
-        border-radius: 5px !important;
+        border-radius: 3px !important;
         border: 1px solid rgba(255, 105, 180, 0.3) !important;
     }
     
     .game-info h1 {
-        font-size: 1em !important;
-        margin-bottom: 2px !important;
-        line-height: 1.1 !important;
+        font-size: 0.8em !important;
+        margin-bottom: 1px !important;
+        line-height: 1.0 !important;
     }
     
     .stats {
-        font-size: 0.7em !important;
-        gap: 8px !important;
-        margin-bottom: 2px !important;
+        font-size: 0.6em !important;
+        gap: 6px !important;
+        margin-bottom: 1px !important;
     }
     
     .controls-info {
-        font-size: 0.6em !important;
-        display: none !important; /* Hide instructions in landscape */
+        display: none !important; /* Hide instructions completely */
     }
     
     .game-message {
@@ -407,10 +375,10 @@ body::before {
         border-radius: 5px !important;
         flex-shrink: 1 !important;
         flex-grow: 1 !important;
-        /* Use maximum available height */
+        /* Use maximum available height with navbar compensation */
         max-width: calc(100% - 120px) !important; /* Leave space for side controls */
-        max-height: calc(var(--available-height, 100vh) - 40px) !important;
-        max-height: calc(calc(var(--vh, 1vh) * 100) - 40px) !important;
+        max-height: calc(var(--available-height, 100vh) - 20px) !important;
+        max-height: calc(calc(var(--vh, 1vh) * 100) - 20px) !important;
         object-fit: contain !important;
         margin: 0 auto !important;
         /* Center canvas with side controls */

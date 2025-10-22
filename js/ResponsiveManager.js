@@ -102,7 +102,7 @@ class ResponsiveManager {
             const sideControlsWidth = 140; // Space for side controls (60px + gap + margin)
             
             // Minimal padding for landscape
-            const verticalPadding = 5;
+            const verticalPadding = 2; // Reduced padding
             const horizontalPadding = sideControlsWidth; // Reserve space for side controls
             
             availableWidth = containerWidth - horizontalPadding;
