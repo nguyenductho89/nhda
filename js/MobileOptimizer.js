@@ -13,12 +13,16 @@ class MobileOptimizer {
         // Add fullscreen button for mobile Chrome
         this.addFullscreenButton();
         
+        // Hide mobile browser UI immediately
+        this.hideBrowserUI();
+        
         // Force viewport height update
         this.updateViewportHeight();
         
         // Listen for all possible resize events
         window.addEventListener('resize', () => this.updateViewportHeight());
         window.addEventListener('orientationchange', () => {
+            setTimeout(() => this.hideBrowserUI(), 100);
             setTimeout(() => this.updateViewportHeight(), 100);
             setTimeout(() => this.updateViewportHeight(), 300);
             setTimeout(() => this.updateViewportHeight(), 500);
@@ -46,6 +50,9 @@ class MobileOptimizer {
             this.isFullscreen = !!document.fullscreenElement;
             this.updateViewportHeight();
         });
+        
+        // Additional mobile UI hiding
+        this.setupMobileUIHiding();
     }
     
     updateViewportHeight() {
@@ -163,15 +170,67 @@ class MobileOptimizer {
         }
     }
     
-    hideBrowserUI() {
-        // Alternative method to maximize screen space
-        window.scrollTo(0, 1);
-        setTimeout(() => {
-            window.scrollTo(0, 0);
-            this.updateViewportHeight();
-        }, 100);
+    setupMobileUIHiding() {
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
         
-        console.log('📱 Attempted to hide browser UI');
+        // Prevent context menu
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+        
+        // Prevent text selection
+        document.addEventListener('selectstart', (e) => {
+            e.preventDefault();
+        });
+        
+        // Prevent pull-to-refresh
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        console.log('📱 Mobile UI hiding setup complete');
+    }
+    
+    hideBrowserUI() {
+        // Multiple methods to hide browser UI
+        try {
+            // Method 1: Scroll to hide address bar
+            window.scrollTo(0, 1);
+            
+            // Method 2: Set body height to screen height
+            document.body.style.height = window.screen.height + 'px';
+            
+            // Method 3: Force viewport update
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+                this.updateViewportHeight();
+                
+                // Method 4: Try to trigger resize
+                window.dispatchEvent(new Event('resize'));
+            }, 100);
+            
+            // Method 5: Additional scroll attempts
+            setTimeout(() => {
+                window.scrollTo(0, 1);
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                }, 50);
+            }, 200);
+            
+            console.log('📱 Attempted to hide browser UI with multiple methods');
+        } catch (error) {
+            console.warn('Error hiding browser UI:', error);
+        }
     }
 }
 

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, minimal-ui">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#FFB6C1">
+    <title>Mobile Debug - Wedding Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFB6C1 50%, #DDA0DD 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .debug-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.3);
+            height: calc(100vh - 20px);
+            overflow-y: auto;
+        }
+        
+        .debug-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            border-left: 3px solid #FF69B4;
+        }
+        
+        .debug-item h3 {
+            margin: 0 0 8px 0;
+            color: #C71585;
+            font-size: 16px;
+        }
+        
+        .debug-result {
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        
+        .pass { color: green; }
+        .fail { color: red; }
+        .info { color: blue; }
+        
+        .mobile-controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            background: linear-gradient(135deg, #FF69B4, #FFB6C1);
+            border: 2px solid #C71585;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(255, 105, 180, 0.3);
+            transition: all 0.2s;
+            font-weight: bold;
+            touch-action: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .control-btn:active {
+            transform: scale(0.95);
+            background: linear-gradient(135deg, #FF1493, #FF69B4);
+        }
+        
+        .jump-btn {
+            width: 70px;
+            height: 70px;
+            font-size: 24px;
+            background: linear-gradient(135deg, #FF1493, #C71585);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #FF69B4, #FFB6C1);
+            border: 2px solid #C71585;
+            border-radius: 8px;
+            color: white;
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: flex !important;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .mobile-controls {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>📱 Mobile Debug</h1>
+        
+        <div class="debug-item">
+            <h3>Device Info</h3>
+            <div id="deviceInfo">Loading...</div>
+        </div>
+        
+        <div class="debug-item">
+            <h3>Viewport Info</h3>
+            <div id="viewportInfo">Loading...</div>
+        </div>
+        
+        <div class="debug-item">
+            <h3>Mobile Controls Test</h3>
+            <div id="controlsInfo">Loading...</div>
+            <div class="mobile-controls">
+                <div style="display: flex; gap: 8px;">
+                    <button class="control-btn" id="leftBtn">◀</button>
+                    <button class="control-btn" id="rightBtn">▶</button>
+                </div>
+                <div>
+                    <button class="control-btn jump-btn" id="jumpBtn">↑<br><small>Nhảy</small></button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="debug-item">
+            <h3>Touch Events</h3>
+            <div id="touchInfo">Touch buttons to test...</div>
+        </div>
+        
+        <div class="debug-item">
+            <h3>Browser UI</h3>
+            <div id="browserInfo">Loading...</div>
+            <button onclick="hideBrowserUI()">Hide Browser UI</button>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="runTests()">🔄 Refresh Tests</button>
+            <button onclick="window.location.href='index.html'">🎮 Go to Game</button>
+        </div>
+    </div>
+    
+    <script>
+        let touchCount = 0;
+        
+        function updateDeviceInfo() {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const isChrome = /Chrome/i.test(navigator.userAgent);
+            const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent);
+            
+            document.getElementById('deviceInfo').innerHTML = `
+                <div class="debug-result ${isMobile ? 'pass' : 'info'}">Mobile: ${isMobile ? 'Yes' : 'No'}</div>
+                <div class="debug-result ${isChrome ? 'pass' : 'info'}">Chrome: ${isChrome ? 'Yes' : 'No'}</div>
+                <div class="debug-result ${isSafari ? 'pass' : 'info'}">Safari: ${isSafari ? 'Yes' : 'No'}</div>
+            `;
+        }
+        
+        function updateViewportInfo() {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const visualVw = window.visualViewport ? window.visualViewport.width : 'N/A';
+            const visualVh = window.visualViewport ? window.visualViewport.height : 'N/A';
+            const screenW = window.screen.width;
+            const screenH = window.screen.height;
+            
+            document.getElementById('viewportInfo').innerHTML = `
+                <div class="debug-result info">Window: ${vw} x ${vh}</div>
+                <div class="debug-result info">Visual: ${visualVw} x ${visualVh}</div>
+                <div class="debug-result info">Screen: ${screenW} x ${screenH}</div>
+                <div class="debug-result info">DPR: ${window.devicePixelRatio}</div>
+            `;
+        }
+        
+        function updateControlsInfo() {
+            const leftBtn = document.getElementById('leftBtn');
+            const rightBtn = document.getElementById('rightBtn');
+            const jumpBtn = document.getElementById('jumpBtn');
+            const controlsVisible = window.getComputedStyle(leftBtn).display !== 'none';
+            
+            document.getElementById('controlsInfo').innerHTML = `
+                <div class="debug-result ${controlsVisible ? 'pass' : 'fail'}">Controls Visible: ${controlsVisible ? 'Yes' : 'No'}</div>
+                <div class="debug-result info">Left: ${leftBtn ? 'Found' : 'Missing'}</div>
+                <div class="debug-result info">Right: ${rightBtn ? 'Found' : 'Missing'}</div>
+                <div class="debug-result info">Jump: ${jumpBtn ? 'Found' : 'Missing'}</div>
+            `;
+        }
+        
+        function updateBrowserInfo() {
+            const hasVisualViewport = !!window.visualViewport;
+            const hasTouch = 'ontouchstart' in window;
+            const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            
+            document.getElementById('browserInfo').innerHTML = `
+                <div class="debug-result ${hasVisualViewport ? 'pass' : 'fail'}">Visual Viewport: ${hasVisualViewport ? 'Yes' : 'No'}</div>
+                <div class="debug-result ${hasTouch ? 'pass' : 'fail'}">Touch Events: ${hasTouch ? 'Yes' : 'No'}</div>
+                <div class="debug-result ${isFullscreen ? 'pass' : 'info'}">Fullscreen: ${isFullscreen ? 'Yes' : 'No'}</div>
+            `;
+        }
+        
+        function hideBrowserUI() {
+            // Try to hide browser UI
+            window.scrollTo(0, 1);
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+                document.body.style.height = window.screen.height + 'px';
+                window.dispatchEvent(new Event('resize'));
+            }, 100);
+            
+            console.log('Attempted to hide browser UI');
+        }
+        
+        function runTests() {
+            updateDeviceInfo();
+            updateViewportInfo();
+            updateControlsInfo();
+            updateBrowserInfo();
+        }
+        
+        function setupTouchTesting() {
+            const buttons = ['leftBtn', 'rightBtn', 'jumpBtn'];
+            
+            buttons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        touchCount++;
+                        document.getElementById('touchInfo').innerHTML = `
+                            <div class="debug-result pass">Touch Working!</div>
+                            <div class="debug-result info">Count: ${touchCount}</div>
+                            <div class="debug-result info">Button: ${btnId}</div>
+                        `;
+                    });
+                    
+                    btn.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                    });
+                }
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            runTests();
+            setupTouchTesting();
+            
+            // Update on orientation change
+            window.addEventListener('orientationchange', () => {
+                setTimeout(runTests, 500);
+            });
+            
+            // Update on resize
+            window.addEventListener('resize', () => {
+                setTimeout(runTests, 100);
+            });
+        });
+    </script>
+</body>
+</html>
