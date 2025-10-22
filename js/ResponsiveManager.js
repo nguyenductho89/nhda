@@ -100,23 +100,23 @@ class ResponsiveManager {
         
         // No header anymore - calculate available space directly
         // Account for navbar height and side controls
-        // Add aggressive compensation for mobile navbar in landscape
+        // Minimal navbar compensation - user wants maximum canvas height
         const navbarCompensation = isMobile && isLandscape ? 
-            Math.max(navbarHeight * 2, navbarHeight + 40) : // Double navbar or add 40px minimum
+            Math.max(navbarHeight, 20) : // Minimal navbar compensation
             navbarHeight;
         
         const sideControlsWidth = 140; // Space for side controls (60px + gap + margin)
         
-        // Aggressive padding for landscape to prevent navbar cutoff
-        const verticalPadding = isMobile && isLandscape ? 80 : 20; // Much larger padding in mobile landscape
+        // Minimal padding to maximize canvas height
+        const verticalPadding = isMobile && isLandscape ? 10 : 5; // Minimal padding
         const horizontalPadding = sideControlsWidth; // Reserve space for side controls
         
         availableWidth = containerWidth - horizontalPadding;
         availableHeight = viewportHeight - verticalPadding - navbarCompensation;
         
-        // Ensure minimum space but don't be too aggressive
-        availableHeight = Math.max(availableHeight, 250); // Increased minimum height
-        availableWidth = Math.max(availableWidth, 400);
+        // Ensure minimum space - maximize height
+        availableHeight = Math.max(availableHeight, 200); // Minimal minimum height to maximize canvas
+        availableWidth = Math.max(availableWidth, 300);
         
         console.log(`📐 Universal landscape: viewport=${viewportHeight}px, navbar=${navbarHeight}px, navbarComp=${navbarCompensation}px, available=${availableHeight}x${availableWidth}px (padding=${verticalPadding}, sideControls=${sideControlsWidth}px)`);
         
