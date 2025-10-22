@@ -69,7 +69,7 @@ class ResponsiveManager {
             navbarHeight = 0;
         }
         
-        // Use MobileOptimizer for accurate mobile detection
+        // Always use landscape responsive layout for all devices
         let isMobile;
         if (window.mobileOptimizer) {
             isMobile = window.mobileOptimizer.isMobile;
@@ -91,41 +91,33 @@ class ResponsiveManager {
                       (touchMobile && (window.screen.width <= 1400 || window.screen.height <= 1400)) ||
                       (touchMobile && (window.innerWidth <= 1400 || window.innerHeight <= 1400));
         }
-        const isLandscape = window.matchMedia('(orientation: landscape)').matches;
         
-        // Calculate available space based on device and orientation
+        // Always use landscape layout regardless of orientation
+        const isLandscape = true; // Force landscape for all devices
+        
+        // Calculate available space - always use landscape layout
         let availableWidth, availableHeight;
         
-        if (isMobile && isLandscape) {
-            // Mobile landscape - maximize space usage with side controls
-            const gameInfo = document.querySelector('.game-info');
-            const headerHeight = gameInfo ? gameInfo.offsetHeight : 0;
-            
-            // Account for navbar height and side controls
-            const navbarCompensation = navbarHeight;
-            const sideControlsWidth = 140; // Space for side controls (60px + gap + margin)
-            
-            // More reasonable padding for landscape
-            const verticalPadding = 20; // Increased padding to prevent cutoff
-            const horizontalPadding = sideControlsWidth; // Reserve space for side controls
-            
-            availableWidth = containerWidth - horizontalPadding;
-            availableHeight = viewportHeight - headerHeight - verticalPadding - navbarCompensation;
-            
-            // Ensure minimum space but don't be too aggressive
-            availableHeight = Math.max(availableHeight, 250); // Increased minimum height
-            availableWidth = Math.max(availableWidth, 400);
-            
-            console.log(`📐 Mobile landscape: viewport=${viewportHeight}px, navbar=${navbarHeight}px, available=${availableHeight}x${availableWidth}px (header=${headerHeight}, sideControls=${sideControlsWidth}px)`);
-        } else if (isMobile && !isLandscape) {
-            // Mobile portrait - show orientation message
-            availableWidth = containerWidth - 40;
-            availableHeight = 400;
-        } else {
-            // Desktop
-            availableWidth = Math.min(containerWidth - 50, 800);
-            availableHeight = 400;
-        }
+        // Always use landscape responsive layout for all devices
+        const gameInfo = document.querySelector('.game-info');
+        const headerHeight = gameInfo ? gameInfo.offsetHeight : 0;
+        
+        // Account for navbar height and side controls
+        const navbarCompensation = navbarHeight;
+        const sideControlsWidth = 140; // Space for side controls (60px + gap + margin)
+        
+        // More reasonable padding for landscape
+        const verticalPadding = 20; // Increased padding to prevent cutoff
+        const horizontalPadding = sideControlsWidth; // Reserve space for side controls
+        
+        availableWidth = containerWidth - horizontalPadding;
+        availableHeight = viewportHeight - headerHeight - verticalPadding - navbarCompensation;
+        
+        // Ensure minimum space but don't be too aggressive
+        availableHeight = Math.max(availableHeight, 250); // Increased minimum height
+        availableWidth = Math.max(availableWidth, 400);
+        
+        console.log(`📐 Universal landscape: viewport=${viewportHeight}px, navbar=${navbarHeight}px, available=${availableHeight}x${availableWidth}px (header=${headerHeight}, sideControls=${sideControlsWidth}px)`);
         
         // Calculate optimal scale maintaining aspect ratio
         const scaleX = availableWidth / this.baseWidth;
