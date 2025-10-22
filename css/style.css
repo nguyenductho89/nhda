@@ -454,7 +454,7 @@ body::before {
 }
 
 /* Show mobile controls on all mobile devices */
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-height: 768px), (orientation: landscape) and (max-width: 1024px) {
     .mobile-controls {
         display: flex !important;
         visibility: visible !important;

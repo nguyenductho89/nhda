@@ -1,10 +1,27 @@
 // Mobile Browser Optimizer - Aggressive viewport handling
 class MobileOptimizer {
     constructor() {
-        this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        this.isMobile = this.detectMobile();
         this.isChrome = /Chrome/i.test(navigator.userAgent);
         this.isFullscreen = false;
         this.init();
+    }
+    
+    detectMobile() {
+        // Check user agent first
+        const userAgentMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        // Check screen size and touch capability
+        const screenMobile = window.screen.width <= 768 || window.screen.height <= 768;
+        const touchMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        // Check if it's a mobile device based on multiple factors
+        return userAgentMobile || (screenMobile && touchMobile);
+    }
+    
+    updateMobileDetection() {
+        this.isMobile = this.detectMobile();
+        console.log(`📱 Mobile detection updated: ${this.isMobile} (UA: ${/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}, Screen: ${window.screen.width}x${window.screen.height}, Touch: ${'ontouchstart' in window})`);
     }
     
     init() {
@@ -20,8 +37,12 @@ class MobileOptimizer {
         this.updateViewportHeight();
         
         // Listen for all possible resize events
-        window.addEventListener('resize', () => this.updateViewportHeight());
+        window.addEventListener('resize', () => {
+            this.updateMobileDetection();
+            this.updateViewportHeight();
+        });
         window.addEventListener('orientationchange', () => {
+            setTimeout(() => this.updateMobileDetection(), 50);
             setTimeout(() => this.hideBrowserUI(), 100);
             setTimeout(() => this.updateViewportHeight(), 100);
             setTimeout(() => this.updateViewportHeight(), 300);

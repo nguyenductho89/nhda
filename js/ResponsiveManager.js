@@ -64,7 +64,14 @@ class ResponsiveManager {
             viewportHeight = window.innerHeight;
         }
         
-        const isMobile = window.innerWidth <= 768;
+        // Use MobileOptimizer for accurate mobile detection
+        let isMobile;
+        if (window.mobileOptimizer) {
+            isMobile = window.mobileOptimizer.isMobile;
+        } else {
+            // Fallback detection
+            isMobile = window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        }
         const isLandscape = window.matchMedia('(orientation: landscape)').matches;
         
         // Calculate available space based on device and orientation
@@ -153,7 +160,11 @@ class ResponsiveManager {
     }
     
     isMobile() {
-        return window.innerWidth <= 768;
+        if (window.mobileOptimizer) {
+            return window.mobileOptimizer.isMobile;
+        }
+        // Fallback detection
+        return window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     }
     
     isLandscape() {
