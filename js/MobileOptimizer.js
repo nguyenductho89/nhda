@@ -11,12 +11,29 @@ class MobileOptimizer {
         // Check user agent first
         const userAgentMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
-        // Check screen size and touch capability
-        const screenMobile = window.screen.width <= 768 || window.screen.height <= 768;
+        // Check screen size and touch capability - be more aggressive
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        const innerWidth = window.innerWidth;
+        const innerHeight = window.innerHeight;
+        
+        // Mobile if any dimension is mobile-sized
+        const screenMobile = screenWidth <= 1024 || screenHeight <= 1024;
+        const innerMobile = innerWidth <= 1024 || innerHeight <= 1024;
+        
+        // Touch capability
         const touchMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         
-        // Check if it's a mobile device based on multiple factors
-        return userAgentMobile || (screenMobile && touchMobile);
+        // Additional mobile indicators
+        const isMobileDevice = userAgentMobile || 
+                              (screenMobile && touchMobile) || 
+                              (innerMobile && touchMobile) ||
+                              (screenWidth <= 768 || screenHeight <= 768) ||
+                              (innerWidth <= 768 || innerHeight <= 768);
+        
+        console.log(`📱 Mobile detection: ${isMobileDevice} (UA: ${userAgentMobile}, Screen: ${screenWidth}x${screenHeight}, Inner: ${innerWidth}x${innerHeight}, Touch: ${touchMobile})`);
+        
+        return isMobileDevice;
     }
     
     updateMobileDetection() {

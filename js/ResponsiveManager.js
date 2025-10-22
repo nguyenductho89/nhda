@@ -74,8 +74,17 @@ class ResponsiveManager {
         if (window.mobileOptimizer) {
             isMobile = window.mobileOptimizer.isMobile;
         } else {
-            // Fallback detection
-            isMobile = window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            // Enhanced fallback detection
+            const userAgentMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const screenMobile = window.screen.width <= 1024 || window.screen.height <= 1024;
+            const innerMobile = window.innerWidth <= 1024 || window.innerHeight <= 1024;
+            const touchMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            isMobile = userAgentMobile || 
+                      (screenMobile && touchMobile) || 
+                      (innerMobile && touchMobile) ||
+                      (window.screen.width <= 768 || window.screen.height <= 768) ||
+                      (window.innerWidth <= 768 || window.innerHeight <= 768);
         }
         const isLandscape = window.matchMedia('(orientation: landscape)').matches;
         

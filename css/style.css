@@ -539,7 +539,7 @@ body::before {
 }
 
 /* Show mobile controls on all mobile devices with side layout */
-@media (max-width: 768px), (max-height: 768px), (orientation: landscape) and (max-width: 1024px) {
+@media (max-width: 1024px), (max-height: 1024px), (orientation: landscape) and (max-width: 1366px) {
     .mobile-controls {
         display: flex !important;
         visibility: visible !important;

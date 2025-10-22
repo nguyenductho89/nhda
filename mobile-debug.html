@@ -110,7 +110,7 @@
             transform: scale(0.95);
         }
         
-        @media (max-width: 768px), (max-height: 768px), (orientation: landscape) and (max-width: 1024px) {
+        @media (max-width: 1024px), (max-height: 1024px), (orientation: landscape) and (max-width: 1366px) {
             .mobile-controls {
                 display: flex !important;
                 position: fixed !important;
@@ -143,7 +143,7 @@
             }
         }
         
-        @media (min-width: 769px) and (min-height: 769px) and (orientation: portrait) {
+        @media (min-width: 1025px) and (min-height: 1025px) and (orientation: portrait) {
             .mobile-controls {
                 display: none;
             }
@@ -200,9 +200,21 @@
         
         function updateDeviceInfo() {
             const userAgentMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            const screenMobile = window.screen.width <= 768 || window.screen.height <= 768;
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+            const innerWidth = window.innerWidth;
+            const innerHeight = window.innerHeight;
+            
+            const screenMobile = screenWidth <= 1024 || screenHeight <= 1024;
+            const innerMobile = innerWidth <= 1024 || innerHeight <= 1024;
             const touchMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            const isMobile = userAgentMobile || (screenMobile && touchMobile);
+            
+            const isMobile = userAgentMobile || 
+                            (screenMobile && touchMobile) || 
+                            (innerMobile && touchMobile) ||
+                            (screenWidth <= 768 || screenHeight <= 768) ||
+                            (innerWidth <= 768 || innerHeight <= 768);
+            
             const isChrome = /Chrome/i.test(navigator.userAgent);
             const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent);
             
@@ -210,6 +222,7 @@
                 <div class="debug-result ${isMobile ? 'pass' : 'info'}">Mobile: ${isMobile ? 'Yes' : 'No'}</div>
                 <div class="debug-result ${userAgentMobile ? 'pass' : 'info'}">UA Mobile: ${userAgentMobile ? 'Yes' : 'No'}</div>
                 <div class="debug-result ${screenMobile ? 'pass' : 'info'}">Screen Mobile: ${screenMobile ? 'Yes' : 'No'}</div>
+                <div class="debug-result ${innerMobile ? 'pass' : 'info'}">Inner Mobile: ${innerMobile ? 'Yes' : 'No'}</div>
                 <div class="debug-result ${touchMobile ? 'pass' : 'info'}">Touch: ${touchMobile ? 'Yes' : 'No'}</div>
                 <div class="debug-result ${isChrome ? 'pass' : 'info'}">Chrome: ${isChrome ? 'Yes' : 'No'}</div>
                 <div class="debug-result ${isSafari ? 'pass' : 'info'}">Safari: ${isSafari ? 'Yes' : 'No'}</div>
